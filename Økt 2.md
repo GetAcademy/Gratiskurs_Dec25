@@ -84,6 +84,7 @@ Da må lage noen [`if`](https://www.w3schools.com/jsref/jsref_if.asp)-sjekker fo
 ## Bonusoppgave!
 
 ### Horseracer!
+![Horseracer](./img/horseracer.png)
 
 (Løs detta med variabler og if-setninger! Ta utgangspunkt med koden under som mal!)
 1) Få hesteridern inn i canvas! ([`drawImage()`](https://www.w3schools.com/graphics/canvas_images.asp))   

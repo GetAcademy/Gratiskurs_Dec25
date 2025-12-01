@@ -2,7 +2,8 @@
 
 ## **Velkommen**: Velkommen til Gratiskurs i JavaScript og canvas! 
 
-    Dette kurset går over fire korte økter hvor dere lærer å tegne på `canvas`, lage enkle animasjoner, og bruke grunnleggende programmeringsprinsipper i JavaScript. Vi anbefaler å følge med, stille spørsmål i Discord, og bruke opptakene senere når dere prøver selv.
+Dette kurset går over fire korte økter hvor dere lærer å tegne på `canvas`, lage enkle animasjoner, og bruke grunnleggende programmeringsprinsipper i JavaScript.
+Vi anbefaler å følge med, stille spørsmål i Discord, og bruke opptakene senere når dere prøver selv.
 
 ## **Kort pensum**
 

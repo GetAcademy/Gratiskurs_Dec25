@@ -1,10 +1,16 @@
 ## Økt 2
 
+### Før man starter:
+- Det ligger en *mal* for oppsettet man trenger [her](canvas_mal.html) - om man skulle ønske et blankt *lerret* :P
+- Bare å kopiere koden derfra inn i en ny fil i Visual Studio Code!
+
+---
+
 ### Oppgave 1: Variabler
 
-1) Lag to [variabler](https://www.w3schools.com/js/js_variables.asp) som skal tilsvare x og y posisjonen til en sirkel - sett de til en valid verdi
-    - `let x`
-    - `let y`
+1) Lag to [variabler](https://www.w3schools.com/js/js_variables.asp) som skal tilsvare x og y posisjonen til en sirkel - sett de til en valid verdi, f.eks:
+    - `let x = 50`
+    - `let y = 50`
 2) Bruk disse variablene for å lage en sirkel med `arc()`
 3) Endre verdiene i `x` og `y` og lagre etter hver endring
     - Du burde se sirkelen flytte på seg!
@@ -17,8 +23,8 @@ En [`arc()`](https://www.w3schools.com/tags/canvas_arc.asp) sin tredje verdi st�
 ctx.arc(x, y, radius, startAngle, endAngle)
 ```
 
-1) Lag enda en variabel for størrelsen - sett den til en valid verdi
-    - `let size`
+1) Lag enda en variabel for størrelsen - sett den til en valid verdi, f.eks:
+    - `let size = 30`
 2) Sett variablen inn på riktig sted i `arc()`
 3) Endre verdien i `size` og lagre etter hver endring
     - Sirkelen burde endre størrelse!
@@ -49,7 +55,13 @@ JavaScript har en innebygd funksjon som vi kan bruke for å lage en "animasjon" 
 For å kjøre denne, så må vi sende med funksjonen vi laget!
 
 1) Legg til en `requestAnimationFrame(move)` nederst i `move()` funksjonen.
-    - Vi trenger navnet på funksjonen vi laget inne i parantesene på `requestAnimationFrame`!
+    ```js
+    move()
+    function move() {
+        ...
+        requestAnimationFrame(move)
+    }
+    ```
 
 Nå *animerer* vi teknisk sett, men vi må spesifisere hva som skal *endre* seg i `move()`-funksjonen.
 
@@ -75,8 +87,8 @@ Nå forsvinner sirkelen ut av canvas, som kan være ukjekt - fordi vi helst vil 
 
 Da må lage noen [`if`](https://www.w3schools.com/jsref/jsref_if.asp)-sjekker for å sjekke om sirkelen er der den skal være!
 
-1) Legg til en ny variabel for fart sammen med de andre variablene
-    - `let speed`
+1) Legg til en ny variabel for fart sammen med de andre variablene, f.eks.
+    - `let speed = 1`
 2) Endre `x += 1` til `x += speed`
     - Hvis `speed` er satt til `1`, så vil du få samme resultat!
 3) Inne i funksjonen, lag en ny linje hvor du skriver "`if()`".
@@ -87,6 +99,13 @@ Da må lage noen [`if`](https://www.w3schools.com/jsref/jsref_if.asp)-sjekker fo
     - `speed = -speed`
     - Dette betyr: **Sett fart til negativ fart** (som da er motsatt retning)
 5) Sirkel burde sprette i motsatt retning!
+    <details>
+      <summary>👈 Sjekk om du skrev if-en riktig!</summary>
+
+      ```js
+      if(x > c.width) speed = -speed
+      ```
+    </details>
 
 **Bonus:**
 
@@ -95,7 +114,63 @@ Da må lage noen [`if`](https://www.w3schools.com/jsref/jsref_if.asp)-sjekker fo
 
 ---
 
-## Bonusoppgave
+## Bonusoppgaver!
+
+### DVD-logo!
+![dvdscreensaver](./img/dvdscreensaver.gif)
+
+Ta utgangspunkt i denne koden:
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DVD</title>
+    <style>
+        canvas {
+            background-color: black;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="fjernsyn" width="800" height="600"></canvas>
+    <img id="img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Dvd_logo.svg/1200px-Dvd_logo.svg.png" style="display:none;">
+    <script>
+        const c = document.getElementById('fjernsyn');
+        const ctx = c.getContext('2d');
+        const img = document.getElementById('img')
+        
+        ctx.drawImage(img, 0, 0, 150, 75)
+
+
+    </script>
+</body>
+</html>
+
+```
+1) **Lag en funksjon**
+    - Skriv en funksjon og legg `ctx.drawImage` inni den
+    - Ikke glem å kjøre funksjonen!
+2) **Få logoen til å flytte på seg!**
+    1) Lag `x` og `y` variabler på utsiden av funksjonen
+    2) Sett variablene på riktig plass inne i [`drawImage()`](https://www.w3schools.com/graphics/canvas_images.asp)
+    3) Skriv en linje i funksjonen som får `x` verdien til å endre seg! (Hint: `+=`)
+    4) Skriv enda en linje i funksjonen som endrer `y` verdien!
+3) **Lag variabler for fart!**
+    1) Lag to variabler for fart i hver retning
+        - `let xSpeed = 3`
+        - `let ySpeed = 2`
+    2) På linjene som beveger logoen, bytt ut tallet med disse variablene
+4) ***Keep between the lines!* - Få logoen til å sprette fra sidene**
+    - Lag `if`-sjekker for hver side av canvas
+    1) Få logoen til å sprette vekk fra høyre "vegg" (Hint: `-xSpeed`)
+    2) Få logoen til å sprette vekk fra "gulvet" (Hint: `-ySpeed`)
+    3) Få logoen til å sprette vekk fra ventre "vegg" (Hint: [`Math.abs(xSpeed)`](https://www.w3schools.com/jsref/jsref_abs.asp))
+    4) Få logoen til å sprette vekk fra "taket" (Hint: `Math.abs(ySpeed)`)
+5) **Endre `xSpeed` og `ySpeed` til å treffe "kantene" oftere :P**
+
+---
 
 ### Horseracer
 
@@ -104,15 +179,26 @@ Da må lage noen [`if`](https://www.w3schools.com/jsref/jsref_if.asp)-sjekker fo
 (Løs detta med variabler og if-setninger! Ta utgangspunkt med koden under som mal!)
 
 1) Få hesteridern inn i canvas! ([`drawImage()`](https://www.w3schools.com/graphics/canvas_images.asp))
-2) Få hesteridern til å bevege seg horisontalt (variabler)
-3) Få den til å bounce vekk fra høyre vegg
-4) Få den til å bounce vekk fra venstre vegg også (Reset x verdi!)
-5) Få den til å gå diagonalt (da trenger vi kanskje tak og gulv?)
-6) Trekk ut vegg-sjekk i egen funksjon (return)
+    - Bildet skal stå helt oppe i venstre hjørne (0,0)
+2) Få hesteridern til å bevege seg horisontalt
+3) Når hesteridern treffer høyre "vegg", så skal den:
+    1) Stoppe å gå til høyre
+    2) Begynne å gå nedover
+4) Når hesteridern treffer "gulvet", så skal den:
+    1) Stoppe å gå nedover
+    2) Begynne å gå til venstre
+5) Når hesteridern treffer venstre "vegg", så skal den:
+    1) Stoppe å gå til venstre
+    2) Begynne å gå oppover
+6) Når hesteridern da *igjen* treffer "taket", så skal den gå som fra start!
 
-BONUS BONUS!
+<details>
+    <summary>👈 Resultat:</summary>
 
-- FÅ ridern til å bevege seg langs kantene med klokka
+![horseracergif](./img/horseracer.gif)
+</details>
+<br>
+    
 
 ```html
 <!DOCTYPE html>
@@ -135,11 +221,14 @@ BONUS BONUS!
         const c = document.getElementById('vanGogh');
         const ctx = c.getContext("2d");
         const img = document.getElementById('horse');
+
+        // Skriv variabler her!
+
         
         move();
         function move() {
             ctx.clearRect(0, 0, c.width, c.height);
-            // Skriv her (!)
+            // Tegn opp her!
 
             
             requestAnimationFrame(move)
@@ -149,3 +238,20 @@ BONUS BONUS!
 </body>
 </html>
 ```
+
+**Troubleshooting:**
+- Hvis bildet bare vandrer unna på utsiden av canvas, uansett hva man gjør i `if`-ene, så kan det hende man må ***stalle* bildeposisjonen** et lite splitt-sekund. 
+
+<details>
+    <summary>👈 Eksempel:</summary>
+
+```js
+if(x < 0) {
+    x = 0 // eksplisitt si at bildet skal være inntil venstre vegg
+    xSpeed = 0;
+    ySpeed = -2;
+}
+// gjøre dette da med alle vegger, gulv og tak!
+```
+</details>
+<br>

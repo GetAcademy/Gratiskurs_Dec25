@@ -54,12 +54,6 @@ Forklar at dette er malen som alltid kan gjenbruke.
 </html>
 ```
 
----
-
-### Del 2 (25 – 50 min) – Canvas og grunnleggende tegning
-
-**Mål:** Forstå grunnstrukturen i HTML + JavaScript, og lære å tegne i canvas.
-
 #### Forklare alle linjene i programmet 
 
  - Vi går gjennom alle delene av eksemplet og forklarer. 
@@ -70,7 +64,55 @@ Forklar at dette er malen som alltid kan gjenbruke.
 - Vi ser på hva rekkefølgen av kommandoene har å si
 - Hva kan gå feil? Forhåpentligvis gjør jeg noen feil 😅 - hvis ikke så må vi konstruere noen feil og se hva som skjer da. 
 
+
+---
+
+### Del 2 (25 – 50 min) – Canvas og grunnleggende tegning
+
+**Mål:** Forstå grunnstrukturen i HTML + JavaScript, og lære å tegne i canvas.
+
 #### Tegne med JavaScript
+
+Ulike måter å tegne på (full oversikt på https://www.w3schools.com/html/html5_canvas.asp): 
+- linjer
+    ```js
+    ctx.moveTo(0, 0);
+    ctx.lineTo(200, 100);
+    ctx.stroke();`
+    ```
+- sirkler og sirkelbuer
+    ```js
+    ctx.beginPath();
+    ctx.arc(95, 50, 40, 0, 2 * Math.PI);
+    ctx.stroke();
+    ```
+- tekst
+    ```js
+    ctx.font = "30px Arial";
+    ctx.fillText("Hello World", 10, 50);
+    ctx.strokeText("Hello World", 10, 50);
+    ```
+- gradient
+    ```js
+    // Create gradient
+    var grd = ctx.createLinearGradient(0, 0, 200, 0);
+    grd.addColorStop(0, "red");
+    grd.addColorStop(1, "white");
+
+    // Fill with gradient
+    ctx.fillStyle = grd;
+    ctx.fillRect(10, 10, 150, 80);
+    ```
+- bilde
+    ```html
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/79/Operation_Upshot-Knothole_-_Badger_001.jpg" style="display: none"/>
+    ```
+    ```js
+    const img = document.getElementById('bildeId');
+    ctx.drawImage(img, 10, 10);
+    ```
+
+#### Eksempel
 Vis hvordan vi “snakker til canvas” gjennom `ctx`:
 
 ```js

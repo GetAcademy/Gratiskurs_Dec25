@@ -1,9 +1,11 @@
 # Gratiskurs JavaScript og canvas — Get Academy (Desember 2025)
 <!-- markdownlint-disable MD033 -->
+<a href="https://getacademy.no">
 <img src="img/GET_RGB_logo-01-2.png" alt="GET Logo" width="200" height="auto">
+</a>
 <!-- markdownlint-disable MD033 -->
 
-## **Velkommen**: Velkommen til Gratiskurs i JavaScript og canvas! 
+## **Velkommen**: Velkommen til Gratiskurs i JavaScript og canvas!
 
 Dette kurset går over fire korte økter hvor dere lærer å tegne på `canvas`, lage enkle animasjoner, og bruke grunnleggende programmeringsprinsipper i JavaScript.
 Vi anbefaler å følge med, stille spørsmål i Discord, og bruke opptakene senere når dere prøver selv.

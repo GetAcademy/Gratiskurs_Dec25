@@ -1,4 +1,7 @@
 # Gratiskurs JavaScript og canvas — Get Academy (Desember 2025)
+<!-- markdownlint-disable MD033 -->
+<img src="img/GET_RGB_logo-01-2.png" alt="GET Logo" width="200" height="auto">
+<!-- markdownlint-disable MD033 -->
 
 ## **Velkommen**: Velkommen til Gratiskurs i JavaScript og canvas! 
 

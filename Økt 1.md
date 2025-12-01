@@ -133,63 +133,251 @@ ctx.fillText("Hei canvas!", 140, 280);
 
 ---
 
-### Del 3 (50 – 75 min) – Funksjoner og egne kommandoer
+### Del 3 (50–75 min) – Funksjoner og egne kommandoer
 
-**Mål:** Lære å lage og bruke funksjoner for å gjenbruke kode.
+**Mål:**  
+- Forstå hva en funksjon er  
+- Lage egne kommandoer  
+- Introdusere parametre én etter én  
+- Avslutte med en funksjon som tegner et mer komplekst objekt (ansikt)
 
-#### Demo 2 – Funksjoner uten og med parametre
+---
+
+# 🧩 Trinn 1 – Enkel funksjon (uten parametre, fast gjennomsiktig farge)
+
+Vi viser at en funksjon gjør det samme hver gang den kalles.
 
 ```js
 function drawBox() {
-  ctx.fillStyle = "green";
-  ctx.fillRect(100, 100, 80, 60);
+  ctx.fillStyle = "rgba(0, 255, 255, 0.4)"; // gjennomsiktig turkis
+  ctx.fillRect(100, 100, 120, 80);
 }
 
-function drawCircle(x, y, r, color) {
+// Kall funksjonen flere ganger:
+drawBox();
+drawBox();
+drawBox();
+```
+
+**Poenger:**
+- En funksjon er en egen kommando vi lager selv.
+- Hver gang vi kaller den, kjøres den samme “oppskriften”.
+- Dette gjør koden ryddig og forutsigbar.
+
+---
+
+# 🧩 Trinn 2 – Legge til én parameter: x-posisjon
+
+Vi lar brukeren bestemme hvor figuren havner horisontalt.
+
+```js
+function drawBox(x) {
+  ctx.fillStyle = "rgba(0, 255, 255, 0.4)";
+  ctx.fillRect(x, 100, 120, 80);
+}
+
+drawBox(50);
+drawBox(200);
+drawBox(350);
+```
+
+**Poeng:**  
+- Funksjonen gjør fortsatt det samme, men du styrer *hvor*.
+
+---
+
+# 🧩 Trinn 3 – To parametre: x og y
+
+Nå kan firkanten plasseres hvor som helst på skjermen.
+
+```js
+function drawBox(x, y) {
+  ctx.fillStyle = "rgba(0, 255, 255, 0.4)";
+  ctx.fillRect(x, y, 120, 80);
+}
+
+drawBox(50, 50);
+drawBox(200, 120);
+drawBox(350, 250);
+```
+
+**Poeng:**  
+- Én funksjon kan tegne mange forskjellige varianter av “samme ting”.
+- Funksjoner med parametre = fleksible funksjoner.
+
+---
+
+# 🧩 Trinn 4 – Legge til farge som parameter
+
+Nå styrer vi ikke bare posisjon, men også utseendet.
+
+```js
+function drawBox(x, y, color) {
+  ctx.fillStyle = color; // fargen bestemt av parameteren
+  ctx.fillRect(x, y, 120, 80);
+}
+
+drawBox(50, 50, "red");
+drawBox(200, 120, "green");
+drawBox(350, 250, "rgba(0, 0, 255, 0.5)"); // blå med gjennomsiktighet
+```
+
+**Poenger:**  
+- Funksjonen kan nå gjøre “det samme”, men på **mange måter**.
+- Vi har nå full kontroll over posisjon *og* farge.
+
+---
+
+# 🧩 Trinn 5 – Funksjon som tegner noe mer komplekst: et enkelt ansikt
+
+Her bruker vi funksjoner til å bygge en liten figur.
+
+```js
+function drawFace(x, y) {
+  // Hode
   ctx.beginPath();
-  ctx.fillStyle = color;
-  ctx.arc(x, y, r, 0, Math.PI * 2);
+  ctx.fillStyle = "#ffcc99";
+  ctx.arc(x, y, 60, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Venstre øye
+  ctx.beginPath();
+  ctx.fillStyle = "black";
+  ctx.arc(x - 20, y - 15, 8, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Høyre øye
+  ctx.beginPath();
+  ctx.arc(x + 20, y - 15, 8, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Munn
+  ctx.beginPath();
+  ctx.strokeStyle = "black";
+  ctx.lineWidth = 4;
+  ctx.arc(x, y + 10, 25, 0, Math.PI);
+  ctx.stroke();
+}
+
+drawFace(150, 150);
+drawFace(400, 200);
+```
+
+**Poenger:**
+- En funksjon kan inneholde mange tegnekommandoer.
+- Hele “ansiktet” kan flyttes med bare x og y.
+- Dette er grunnlaget for å lage karakterer i spill.
+
+---
+
+# 🧩 Trappetrinn 6 – DRY: Don’t Repeat Yourself  
+### Lage egne funksjoner for hode, øye og munn
+
+Nå viser vi hvorfor funksjoner virkelig er nyttige:  
+Vi slipper å gjenta den samme koden flere ganger.
+
+I stedet for én stor `drawFace`-funksjon, deler vi opp i små byggeklosser.
+
+---
+
+## 6a) Funksjon for å tegne et hode
+
+```js
+function drawHead(x, y) {
+  ctx.beginPath();
+  ctx.fillStyle = "#ffcc99";
+  ctx.arc(x, y, 60, 0, Math.PI * 2);
   ctx.fill();
 }
 ```
 
-#### Feilsøking og vanlige feil
-- “Undefined” → variabel ikke definert.  
-- “Unexpected token” → glemt parentes eller klamme.  
-- Bruk nettleserkonsollen (`Ctrl + Shift + I → Console`) for feilmeldinger.
+---
+
+## 6b) Funksjon for å tegne ett øye
+
+Her er poenget: **samme funksjon tegner begge øynene**, forskjellen ligger bare i parameterne.
+
+```js
+function drawEye(x, y) {
+  ctx.beginPath();
+  ctx.fillStyle = "black";
+  ctx.arc(x, y, 8, 0, Math.PI * 2);
+  ctx.fill();
+}
+```
+
+Vi kaller den to ganger med forskjellige koordinater:
+
+```js
+drawEye(x - 20, y - 15); // venstre øye
+drawEye(x + 20, y - 15); // høyre øye
+```
 
 ---
 
-### Del 4 (75 – 90 min) – Oppsummering og oppgaver
+## 6c) Funksjon for å tegne en munn
 
-**Oppgaver (frivillige mellom øktene):**
-1. Endre fargene på figurer.  
-2. Tegn noe eget (logo, flagg, figur).  
-3. Se opptaket og prøv å gjenskape demoen.  
-
-**Neste gang (torsdag 4. des.):**
-- Variabler og operatorer  
-- `requestAnimationFrame()` for bevegelse  
-- Enkle `if`-setninger  
-- Fysikk (fart og retning)
-
----
-
-## ⏱️ Tidsestimat
-
-| Del | Tema | Estimat |
-|-----|------|---------|
-| 1 | Velkommen, info, installasjon | 25 min |
-| 2 | Canvas og tegning | 25 min |
-| 3 | Funksjoner + feilsøking | 25 min |
-| 4 | Spørsmål + oppsummering | 10 min |
+```js
+function drawMouth(x, y) {
+  ctx.beginPath();
+  ctx.strokeStyle = "black";
+  ctx.lineWidth = 4;
+  ctx.arc(x, y + 10, 25, 0, Math.PI);
+  ctx.stroke();
+}
+```
 
 ---
 
-## 📎 Ressurser
+## 6d) Ny versjon av drawFace – nå med gjenbruk
 
-- **Discord:** (lenke deles i timen)  
-- **GitHub-repo:** https://github.com/GetAcademy/SimpleFlappyBirdWeb  
-- **Demo-side:** https://getacademy.github.io/SimpleFlappyBirdWeb/  
-- **Neste økt:** Torsdag 4. desember kl. 14–15:30  
+Nå setter vi sammen komponentene til én figur:
 
+```js
+function drawFace(x, y) {
+  drawHead(x, y);
+  drawEye(x - 20, y - 15);
+  drawEye(x + 20, y - 15);
+  drawMouth(x, y);
+}
+
+drawFace(150, 150);
+drawFace(400, 200);
+```
+
+---
+
+## Hvorfor er dette bedre?
+
+- Hvis vi vil endre fargen på øynene → endrer vi **ett sted**.  
+- Hvis vi vil gjøre hodet større → endrer vi **ett sted**.  
+- Hvis vi vil bruke øyne til et annet prosjekt → vi kan gjenbruke funksjonen.  
+- Funksjonene blir små, enkle og gjør **én ting hver**.  
+- `drawFace()` blir ren og lett å lese, nesten som en setning:
+
+```
+Tegn hode  
+Tegn venstre øye  
+Tegn høyre øye  
+Tegn munn  
+```
+
+Dette er kjernen i **DRY**:  
+> “Don’t Repeat Yourself” – skriv ting *ett sted*, bruk det mange ganger.
+
+---
+
+Neste steg i kurset:  
+I Økt 2 bruker vi denne idéen til å lage **bevegelige** figurer!
+
+
+# 🧩 Oppsummering
+
+I denne delen lærte dere:
+
+- Hva funksjoner er og hvorfor vi lager dem  
+- Hvordan vi kan starte enkelt og bygge opp kompleksitet  
+- Hvordan parametre gir oss mer kontroll  
+- Hvordan vi kan tegne en hel figur med én funksjon  
+
+Neste gang begynner vi med **bevegelse og animasjon** – ting skal røre på seg!

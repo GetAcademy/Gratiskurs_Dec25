@@ -75,6 +75,7 @@ Ta kontakt med Geir eller Martin!
 - Tegn en sirkel ved å bruke `ctx.arc()` og `ctx.fill()`
 
     ```js
+    ctx.beginPath();
     // Dette tegner sirkel (x, y, radius, startAngle, endAngle)
     // En "startAngle" på "0" lager full sirkel
     ctx.arc(100, 100, 30, 0, Math.PI * 2);

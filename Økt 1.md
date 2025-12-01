@@ -63,7 +63,10 @@ Forklar at dette er malen som alltid kan gjenbruke.
     - farge
 - Vi ser på hva rekkefølgen av kommandoene har å si
 - Hva kan gå feil? Forhåpentligvis gjør jeg noen feil 😅 - hvis ikke så må vi konstruere noen feil og se hva som skjer da. 
-
+  - Stavefeil  → "is not defined" i konsollen.  
+  - Glemte parenteser → funksjonen kjører ikke (`drawBox` vs `drawBox()`).  
+  - Feil rekkefølge på kode → tegninger havner under/over hverandre uventet.  
+  - Jobbemetode: Åpne konsoll → les første feilmelding → klikk linjenummer → rett → refresh.  
 
 ---
 
@@ -140,6 +143,7 @@ ctx.fillText("Hei canvas!", 140, 280);
 - Lage egne kommandoer  
 - Introdusere parametre én etter én  
 - Avslutte med en funksjon som tegner et mer komplekst objekt (ansikt)
+- Feilsøking
 
 ---
 

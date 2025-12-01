@@ -38,8 +38,11 @@ Forklar at dette er malen som alltid kan gjenbruke.
 ```html
 <!doctype html>
 <html>
+  <style>
+    canvas { background-color: gray; }
+  </style>
   <body>
-    <canvas id="game" width="400" height="300"></canvas>
+    <canvas id="game" width="800" height="800"></canvas>
     <script>
       const c = document.getElementById("game");
       const ctx = c.getContext("2d");
@@ -56,7 +59,6 @@ Forklar at dette er malen som alltid kan gjenbruke.
 ### Del 2 (25 – 50 min) – Canvas og grunnleggende tegning
 
 **Mål:** Forstå grunnstrukturen i HTML + JavaScript, og lære å tegne i canvas.
-
 
 #### Tegne med JavaScript
 Vis hvordan vi “snakker til canvas” gjennom `ctx`:

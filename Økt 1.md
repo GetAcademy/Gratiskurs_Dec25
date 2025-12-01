@@ -60,6 +60,16 @@ Forklar at dette er malen som alltid kan gjenbruke.
 
 **Mål:** Forstå grunnstrukturen i HTML + JavaScript, og lære å tegne i canvas.
 
+#### Forklare alle linjene i programmet 
+
+ - Vi går gjennom alle delene av eksemplet og forklarer. 
+ - Vi tegner flere firkanter - med variasjon i:
+    - posisjon
+    - størrelse
+    - farge
+- Vi ser på hva rekkefølgen av kommandoene har å si
+- Hva kan gå feil? Forhåpentligvis gjør jeg noen feil 😅 - hvis ikke så må vi konstruere noen feil og se hva som skjer da. 
+
 #### Tegne med JavaScript
 Vis hvordan vi “snakker til canvas” gjennom `ctx`:
 

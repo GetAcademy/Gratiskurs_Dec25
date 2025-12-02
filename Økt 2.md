@@ -1,0 +1,1 @@
+Note to self: Husk å vise preload av bilder med onload + funksjon

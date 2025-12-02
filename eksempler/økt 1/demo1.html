@@ -1,16 +1,33 @@
-<!doctype html>
-<html>
-  <style>
-    canvas { background-color: gray; }
-  </style>
-  <body>
-    <canvas id="game" width="800" height="800"></canvas>
-    <script>
-      const c = document.getElementById("game");
-      const ctx = c.getContext("2d");
+<!DOCTYPE html>
+<html lang="en">
 
-      ctx.fillStyle = "red";
-      ctx.fillRect(50, 50, 100, 60);   // firkant
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        canvas {
+            background-color: lightgray;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="game" width="480" height="730"></canvas>
+    <script>
+        const c = document.getElementById("game");
+        const ctx = c.getContext("2d");
+
+        ctx.fillStyle = "green";
+        ctx.fillRect(180, 180, 200, 200);
+
+        ctx.fillStyle = "blue";
+        ctx.fillRect(100, 100, 200, 200);
+
+        ctx.fillStyle = "red";
+        ctx.fillRect(140, 140, 200, 200);
+
     </script>
-  </body>
+</body>
+
 </html>

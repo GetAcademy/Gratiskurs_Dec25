@@ -170,6 +170,8 @@ Ta utgangspunkt i denne koden:
     4) Få logoen til å sprette vekk fra "taket" (Hint: `Math.abs(ySpeed)`)
 5) **Endre `xSpeed` og `ySpeed` til å treffe "kantene" oftere :P**
 
+**BonusBonus!:** Prøv å flytt ut `if`-sjekkene til hver sin metode med [`return`](https://www.w3schools.com/jsref/jsref_return.asp)!
+
 ---
 
 ### Horseracer

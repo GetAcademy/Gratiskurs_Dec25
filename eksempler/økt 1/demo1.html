@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+  <style>
+    canvas { background-color: gray; }
+  </style>
+  <body>
+    <canvas id="game" width="800" height="800"></canvas>
+    <script>
+      const c = document.getElementById("game");
+      const ctx = c.getContext("2d");
+
+      ctx.fillStyle = "red";
+      ctx.fillRect(50, 50, 100, 60);   // firkant
+    </script>
+  </body>
+</html>

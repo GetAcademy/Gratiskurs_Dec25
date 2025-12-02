@@ -79,9 +79,10 @@ Forklar at dette er malen som alltid kan gjenbruke.
 Ulike måter å tegne på (full oversikt på https://www.w3schools.com/html/html5_canvas.asp): 
 - linjer
     ```js
+    ctx.beginPath();
     ctx.moveTo(0, 0);
     ctx.lineTo(200, 100);
-    ctx.stroke();`
+    ctx.stroke();
     ```
 - sirkler og sirkelbuer
     ```js
@@ -114,6 +115,7 @@ Ulike måter å tegne på (full oversikt på https://www.w3schools.com/html/html
     const img = document.getElementById('bildeId');
     ctx.drawImage(img, 10, 10);
     ```
+    - ev. laste ned bilde + https://www.remove.bg/ + legge i mappen
 
 #### Eksempel
 Vis hvordan vi “snakker til canvas” gjennom `ctx`:

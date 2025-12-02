@@ -171,6 +171,12 @@ drawBox();
 - Dette gjør koden ryddig og forutsigbar.
 
 ---
+# 🧩 Trinn 1b – onload => kjekt for bilder!
+
+
+
+
+---
 
 # 🧩 Trinn 2 – Legge til én parameter: x-posisjon
 

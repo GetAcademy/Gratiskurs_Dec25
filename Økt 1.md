@@ -76,7 +76,7 @@ Forklar at dette er malen som alltid kan gjenbruke.
 
 #### Tegne med JavaScript
 
-Ulike måter å tegne på (full oversikt på https://www.w3schools.com/html/html5_canvas.asp): 
+Ulike måter å tegne på (full oversikt på https://www.w3schools.com/jsref/api_canvas.asp): 
 - linjer
     ```js
     ctx.beginPath();

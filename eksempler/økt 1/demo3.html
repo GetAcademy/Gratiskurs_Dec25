@@ -13,51 +13,47 @@
 </head>
 
 <body>
-    <img id="bilde1"
-        src="https://upload.wikimedia.org/wikipedia/commons/7/79/Operation_Upshot-Knothole_-_Badger_001.jpg"
-        style="display: none" />
-    <img id="bilde2"
-        src="../../img/Fransk_bulldog.png"
-        style="display: none" />
-    <canvas id="game" width="480" height="730"></canvas>
+    <canvas id="game" width="800" height="730"></canvas>
     <script>
         const c = document.getElementById("game");
         const ctx = c.getContext("2d");
 
-        // Create gradient
-        var grd = ctx.createLinearGradient(0, 0, 480, 480);
-        grd.addColorStop(0, "red");
-        grd.addColorStop(0.5, "white");
-        grd.addColorStop(1, "blue");
-
-        // Fill with gradient
-        ctx.fillStyle = grd;
-        ctx.fillRect(0, 0, 480, 730);
-
+        drawFace(0, 0 );
+        drawFace(300, 300);
         // ctx.beginPath();
-        // ctx.moveTo(0, 0);
-        // ctx.lineTo(200, 100);
-        // ctx.stroke();
+        // ctx.fillStyle = 'blue';
+        // ctx.arc(200, 150, 80, 0, Math.PI * 2);
+        // ctx.fill();
 
-        // ctx.beginPath();
-        // ctx.moveTo(100, 100);
-        // ctx.lineTo(300, 200);
-        // ctx.stroke();
+        function fillSmallGreenRect() {
+            ctx.fillStyle = 'rgba(0, 150, 0, 0.5)';
+            ctx.fillRect(100, 100, 50, 50);
+        }
 
-        ctx.beginPath();
-        ctx.fillStyle = 'green';
-        ctx.arc(200, 150, 80, 0, Math.PI * 2);
-        ctx.fill();
+        function drawFace(x, y) {
+            ctx.beginPath();
+            ctx.fillStyle = 'pink';
+            ctx.arc(x + 200, y + 200, 200, 0, Math.PI * 2);
+            ctx.fill();
 
-        ctx.font = "30px Arial";
-        ctx.fillText("Hello World", 10, 50);
-        ctx.strokeText("Hello World", 10, 50);
+            ctx.beginPath();
+            ctx.fillStyle = 'green';
+            ctx.arc(x + 200, y + 220, 20, 0, Math.PI * 2);
+            ctx.fill();
 
-        const img1 = document.getElementById('bilde1');
-        ctx.drawImage(img1, 50, 300, 380, 250);
+            ctx.beginPath();
+            ctx.fillStyle = 'blue';
+            ctx.arc(x + 270, y + 130, 30, 0, Math.PI * 2);
+            ctx.arc(x + 130, y + 130, 30, 0, Math.PI * 2);
+            ctx.fill();
 
-        const img2 = document.getElementById('bilde2');
-        ctx.drawImage(img2, 50, 100);
+            ctx.beginPath();
+            ctx.strokeStyle = 'red';
+            ctx.lineWidth = 10;
+            ctx.arc(x + 200, y + 200, 150, 0.5, Math.PI - 0.5);
+            ctx.stroke();
+        }
+
 
     </script>
 </body>

@@ -71,7 +71,7 @@ Nå *animerer* vi teknisk sett, men vi må spesifisere hva som skal *endre* seg 
 
 ```js
 function move() {
-    ctx.clearRect(0, 0, ctx.width, ctx.height)
+    ctx.clearRect(0, 0, c.width, c.height)
     ...
 ```
 

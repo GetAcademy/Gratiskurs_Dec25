@@ -63,9 +63,12 @@ function drawLocalBox() {
 }
 ```
 
-Poeng å si høyt:
+Viktige poeng:
 - Globale variabler er fine når flere funksjoner trenger samme informasjon (posisjon, fart, score).  
 - Lokale variabler er fine når noe bare gjelder inni én funksjon.
+- Globale variabler initialiseres når siden lastes - og lever like lenge som siden
+- Lokale variabler initialiseres når funksjonen kalles - og lever inntil funksjonen har kjørt ferdig
+
 
 ---
 

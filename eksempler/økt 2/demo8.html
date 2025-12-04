@@ -14,28 +14,33 @@
 
 <body onload="drawRectangles()">
     <img id="martin" src="../../img/martin.png" style="display: none;"/>
-    <canvas id="game" width="800" height="800"></canvas>
+    <img id="beach" src="../../img/big-beach.jpg" style="display: none;"/>
+    <canvas id="game" width="800" height="600"></canvas>
     <script>
         const c = document.getElementById("game");
         const ctx = c.getContext("2d");
 
         const imgMartin = document.querySelector("#martin");
+        const imgBeach = document.querySelector("#beach");
 
         let canvasWidth = c.width;
         let canvasHeight = c.height;
         let rectWidth = 104;
         let rectHeight = 118;
+        let backgroundX = 0;
+        let backgroundWidth = 1000;
+        let backgroundHeight = 600;
         let x = 300;
-        let y = 300;
-        let speedY = -3;
+        let y = 150;
+        let speedY = -1;
         let margin = 50;
-        let gravity = 2;
+        let gravity = 1;
         let friction = 1;
 
         function drawRectangles() {
             clearCanvas();
             drawObject();
-            moveRect();
+            move();
 
             if (isOnGround()) {
                 bounce();
@@ -46,8 +51,9 @@
             requestAnimationFrame(drawRectangles);
         }
 
-        function moveRect() {
+        function move() {
             y += speedY;
+            backgroundX--;
         }
 
         function bounce() {
@@ -71,6 +77,11 @@
 
         function clearCanvas() {
             ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+            ctx.drawImage(imgBeach, backgroundX, 0, backgroundWidth, backgroundHeight);
+            ctx.drawImage(imgBeach, backgroundX + backgroundWidth, 0, backgroundWidth, backgroundHeight);
+            if(backgroundX <= -canvasWidth) {
+                backgroundX = 0;
+            }
         }
 
         // let sum = add(5, 7);

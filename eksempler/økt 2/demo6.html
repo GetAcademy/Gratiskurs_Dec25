@@ -38,10 +38,11 @@
             ctx.fillRect(x, y, rectWidth, rectHeight);
 
             y += speedY;
-            speedY += gravity;
 
             if (y + rectHeight > canvasHeight) {
                 speedY = -speedY * friction;
+            } else {
+                speedY += gravity;
             }
 
             requestAnimationFrame(drawRectangles);

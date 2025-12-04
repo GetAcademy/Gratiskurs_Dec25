@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        canvas {
+            background-color: antiquewhite;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="game" width="800" height="800"></canvas>
+    <script>
+        const c = document.getElementById("game");
+        const ctx = c.getContext("2d");
+
+        let width = 400;
+        let height = 300;
+        let x = 50;
+        let y = 50;
+        let margin = 50;
+
+        drawRectangles();
+
+        function drawRectangles() {
+            ctx.clearRect(0, 0, 800, 800);
+
+            ctx.fillStyle = "green";
+            ctx.fillRect(x, y, width, height);
+
+            ctx.fillStyle = "red";
+            ctx.fillRect(x + margin, y + margin, width, height);
+
+            ctx.fillStyle = "blue";
+            ctx.fillRect(x + 2 * margin, y + 2 * margin, width, height);
+
+            x += 3;
+            y += -1.5;
+
+            requestAnimationFrame(drawRectangles);
+        }
+    </script>
+</body>
+
+</html>

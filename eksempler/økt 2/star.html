@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <title>Gul stjerne i canvas</title>
+</head>
+<body>
+  <canvas id="canvas" width="300" height="300"></canvas>
+
+  <script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    ctx.beginPath();
+    // Hardkodede punkter til en femkantet stjerne
+    ctx.moveTo(150, 50);    // topp
+
+    ctx.lineTo(173.5, 117.6);
+    ctx.lineTo(245.1, 119.1);
+    ctx.lineTo(188.0, 162.4);
+    ctx.lineTo(208.8, 230.9);
+    ctx.lineTo(150.0, 190.0);
+    ctx.lineTo(91.2, 230.9);
+    ctx.lineTo(112.0, 162.4);
+    ctx.lineTo(54.9, 119.1);
+    ctx.lineTo(126.5, 117.6);
+
+    ctx.closePath();
+
+    ctx.fillStyle = "yellow";
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 2;
+
+    ctx.fill();
+    ctx.stroke();
+  </script>
+</body>
+</html>

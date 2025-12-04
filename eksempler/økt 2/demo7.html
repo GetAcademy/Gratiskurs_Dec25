@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        canvas {
+            background-color: antiquewhite;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="game" width="800" height="800"></canvas>
+    <script>
+        const c = document.getElementById("game");
+        const ctx = c.getContext("2d");
+
+        let canvasWidth = c.width;
+        let canvasHeight = c.height;
+        let rectWidth = 70;
+        let rectHeight = 70;
+        let x = 300;
+        let y = 300;
+        let speedY = -3;
+        let margin = 50;
+        let gravity = 2;
+        let friction = 1;
+
+        drawRectangles();
+
+        function drawRectangles() {
+            clearCanvas();
+            fillRect();
+            moveRect();
+
+            if (isOnGround()) {
+                bounce();
+            } else {
+                addGravity();
+            }
+
+            requestAnimationFrame(drawRectangles);
+        }
+
+        function moveRect() {
+            y += speedY;
+        }
+
+        function bounce() {
+            speedY = -speedY * friction;
+        }
+
+        function addGravity() {
+            speedY += gravity;
+        }
+
+        function isOnGround() {
+            // let isOnGround = y + rectHeight > canvasHeight - margin;
+            return y + rectHeight >= canvasHeight - margin;
+        }
+
+        function fillRect() {
+            ctx.fillStyle = 'green';
+            ctx.fillRect(x, y, width, height);
+        }
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+        }
+
+        // let sum = add(5, 7);
+        // function add(a, b) {
+        //     return a + b;
+        // }
+
+    </script>
+</body>
+
+</html>

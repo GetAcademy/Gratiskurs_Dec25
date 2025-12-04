@@ -32,11 +32,14 @@ let y = 50;
 let fart = 3;
 ```
 
+- `let` betyr deklarasjon, og det trenger vi kun å gjøre første gang.
+
 Endre en variabel:
 
 ```js
-x = x + 10;
-y -= 5;
+x = 1;
+x = 2;
+x = 3;
 ```
 
 ---
@@ -50,8 +53,16 @@ let c = 4 * 5;    // 20
 let d = 20 / 4;   // 5
 ```
 
-**Viktige poeng:**
-- Animasjon lages ved å endre tall litt og litt.
+Vanlige operasjoner: 
+
+```js
+x = 1;
+x = x + 1;
+x += 1;
+x++;
+```
+
+Finnes også: `-=`, `*=`, `/=`, `--`;
 
 ---
 

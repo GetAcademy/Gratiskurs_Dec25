@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        canvas {
+            background-color: lightgray;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="game" width="480" height="730"></canvas>
+    <script>
+        const c = document.getElementById("game");
+        const ctx = c.getContext("2d");
+
+        if (confirm('Vil du ha en grønn firkant?')) {
+            ctx.fillStyle = "green";
+            ctx.fillRect(180, 180, 200, 200);
+        } else  if (confirm('Vil du ha en blå firkant?')){
+            ctx.fillStyle = "blue";
+            ctx.fillRect(180, 180, 200, 200);
+        } else {
+            ctx.fillStyle = "red";
+            ctx.fillRect(180, 180, 200, 200);
+        }
+
+    </script>
+</body>
+
+</html>

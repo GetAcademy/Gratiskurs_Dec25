@@ -133,42 +133,44 @@ Ta utgangspunkt i denne koden:
         }
     </style>
 </head>
-<body>
+<body onload="drawImage()">
     <canvas id="fjernsyn" width="800" height="600"></canvas>
-    <img id="img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Dvd_logo.svg/1200px-Dvd_logo.svg.png" style="display:none;">
+    <img id="img" src="https://www.clipartmax.com/png/full/225-2253521_hd-dvd-dvd-video-logo-blu-ray-disc.png" style="display:none;">
     <script>
         const c = document.getElementById('fjernsyn');
         const ctx = c.getContext('2d');
         const img = document.getElementById('img')
         
-        ctx.drawImage(img, 0, 0, 150, 75)
+        
+        function drawImage() {
+            ctx.drawImage(img, 0, 0, 150, 75)
+
+        }
 
 
     </script>
 </body>
 </html>
 
+
 ```
-1) **Lag en funksjon**
-    - Skriv en funksjon og legg `ctx.drawImage` inni den
-    - Ikke glem å kjøre funksjonen!
-2) **Få logoen til å flytte på seg!**
+1) **Få logoen til å flytte på seg!**
     1) Lag `x` og `y` variabler på utsiden av funksjonen
     2) Sett variablene på riktig plass inne i [`drawImage()`](https://www.w3schools.com/graphics/canvas_images.asp)
     3) Skriv en linje i funksjonen som får `x` verdien til å endre seg! (Hint: `+=`)
     4) Skriv enda en linje i funksjonen som endrer `y` verdien!
-3) **Lag variabler for fart!**
+2) **Lag variabler for fart!**
     1) Lag to variabler for fart i hver retning
         - `let xSpeed = 3`
         - `let ySpeed = 2`
     2) På linjene som beveger logoen, bytt ut tallet med disse variablene
-4) ***Keep between the lines!* - Få logoen til å sprette fra sidene**
+3) ***Keep between the lines!* - Få logoen til å sprette fra sidene**
     - Lag `if`-sjekker for hver side av canvas
     1) Få logoen til å sprette vekk fra høyre "vegg" (Hint: `-xSpeed`)
     2) Få logoen til å sprette vekk fra "gulvet" (Hint: `-ySpeed`)
     3) Få logoen til å sprette vekk fra ventre "vegg" (Hint: [`Math.abs(xSpeed)`](https://www.w3schools.com/jsref/jsref_abs.asp))
     4) Få logoen til å sprette vekk fra "taket" (Hint: `Math.abs(ySpeed)`)
-5) **Endre `xSpeed` og `ySpeed` til å treffe "kantene" oftere :P**
+4) **Endre `xSpeed` og `ySpeed` til å treffe "kantene" oftere :P**
 
 **BonusBonus!:** Prøv å flytt ut `if`-sjekkene til hver sin metode med [`return`](https://www.w3schools.com/jsref/jsref_return.asp)!
 

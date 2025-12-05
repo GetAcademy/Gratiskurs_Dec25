@@ -59,7 +59,7 @@ Ta kontakt med Geir eller Martin!
 ```
 3. **Høyreklikk på `tegning.html` i "Explorer" (eller høyreklikk inne på dokumentet) og trykk på `Open with Live Server`**
     - Nettleseren burde dukke opp på skjermen
-    - Den burde vise en svart firkant (vårt lerret!)
+    - Den burde vise en hvit firkant med svarte kanter (vårt lerret!)
 4. **Tegn en firkant!**
     - Rett under den grønne kommentaren hvor det står "Skriv kode her!", skriv:
     ```js

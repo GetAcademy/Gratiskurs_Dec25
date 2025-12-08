@@ -227,15 +227,143 @@ Ved kollisjon mellom:
 
 Samme kollisjonsfunksjon brukes hele veien.
 
+## Bonus – Score og restart (hvis vi får tid)
+
+Dette er ikke nødvendig for å forstå Flappy-mekanikkene, men gir et mer komplett spill.
+Hvis vi ikke rekker alt, er dette et naturlig sted å fortsette neste gang.
+
 ---
 
-## Oppsummering av økten
+## Score
 
-I denne økten har vi:
-- repetert game loop og bevegelse
-- lært tastestyring via boolean per tast
-- introdusert kollisjon med AABB
-- brukt kollisjon til å avgjøre *game over*
-- bygget videre mot et faktisk spill
+### Hva mener vi med score?
 
-Alt bygger på samme enkle ideer – brukt i stadig rikere eksempler.
+I Flappy Bird betyr score vanligvis:
+- antall stolper vi har passert uten å krasje
+
+Score er bare:
+- en variabel
+- som øker under bestemte betingelser
+- og tegnes på skjermen
+
+---
+
+### Starte med score-variabel
+
+```js
+let score = 0;
+```
+
+---
+
+### Øke score når en stolpe passeres
+
+Når en stolpe beveger seg mot venstre:
+- og går forbi spilleren
+- uten at det ble kollisjon
+
+kan vi øke score én gang.
+
+En enkel strategi:
+- hver stolpe har et flagg `hasPassed`
+- når stolpens høyre kant går forbi spillerens x-posisjon:
+  - øk score
+  - sett `hasPassed = true`
+
+Eksempel (konseptuelt):
+
+```js
+if (!pipe.hasPassed && pipe.x + pipe.width < playerX) {
+    score++;
+    pipe.hasPassed = true;
+}
+```
+
+Poenget:
+- samme stolpe skal bare gi poeng én gang
+
+---
+
+### Tegne score på skjermen
+
+I game loop-en, etter at bakgrunnen er tegnet:
+
+```js
+ctx.fillStyle = 'black';
+ctx.font = '24px Arial';
+ctx.fillText('Score: ' + score, 20, 30);
+```
+
+---
+
+## Restart
+
+Når spillet er over:
+- stopper animasjonen
+- spilleren kan ikke gjøre noe mer
+
+Neste steg er å kunne starte på nytt.
+
+---
+
+### Hva må resettes ved restart?
+
+For å starte spillet på nytt må vi:
+- sette spillerens posisjon tilbake
+- nullstille fart (vx / vy)
+- nullstille score
+- flytte stolper tilbake til start
+- sette `gameOver = false`
+
+Dette er ofte mer jobb enn man først tror.
+
+---
+
+### Samle restart-logikk i én funksjon
+
+En ryddig løsning er å ha en egen funksjon:
+
+```js
+function restartGame() {
+    score = 0;
+    gameOver = false;
+
+    playerX = startX;
+    playerY = startY;
+    playerVX = 0;
+    playerVY = 0;
+
+    resetPipes();
+}
+```
+
+Poenget:
+Restart er ikke magi – vi bare setter state tilbake til startverdier.
+
+---
+
+### Starte restart med tastetrykk
+
+For eksempel:
+- trykk `Enter` for å starte på nytt
+
+```js
+if (gameOver && enterPressed) {
+    restartGame();
+}
+```
+
+Her gjenbruker vi:
+- samme tastestyringsmønster som tidligere
+- samme game loop
+
+---
+
+## Viktig poeng
+
+Score og restart lærer oss at:
+- et spill egentlig bare er state
+- game over er bare en bestemt tilstand
+- restart er bare å sette state tilbake
+
+Dette er samme tenkning vi bruker i større applikasjoner også.

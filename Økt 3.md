@@ -1,52 +1,40 @@
-# Økt 3 – Tastestyring, kollisjon og vei mot Flappy Bird
-**JavaScript Canvas – videre på demo8**
+# Økt 3 – Tastestyring, kollisjon og «Flappy Martin»
+**JavaScript Canvas – stegvis progresjon**
 
-Utgangspunkt:
-- `demo8.html` med canvas
-- bakgrunn som scroller
-- figur som påvirkes av gravitasjon
-- game loop (`requestAnimationFrame`)
+I denne økten jobber vi med tre korte og tydelige deler:
+1. En helt enkel firkant for repetisjon av game loop og tastestyring  
+2. demo4.html for å introdusere kollisjon og game over  
+3. demo8.html og veien videre mot «Flappy Martin»  
 
-Målet for økten:
-- styre figuren med tastatur
-- forstå fart i x- og y-retning
-- introdusere kollisjon mellom firkanter
-- bruke kollisjon til *game over*
-- bevege oss helt frem til en enkel Flappy Bird
+Målet er å lære noen få, viktige mekanikker – og bruke dem flere ganger.
 
 ---
 
-## Oversikt over økten
+## Del 1 – Repetisjon: én enkel firkant + tastestyring
 
-1. Vi ser på demo8.html og hva som allerede er på plass  
-2. Tastestyring med boolean per tast  
-3. To firkanter som beveger seg samtidig  
-4. Kollisjon mellom firkanter (AABB)  
-5. Gradvis overgang til Flappy Bird  
-   - space = hopp  
-   - bakken = game over  
-   - stolper + kollisjon  
+Vi starter med et helt enkelt oppsett:
+- én firkant
+- posisjon `x` og `y`
+- en game loop med `requestAnimationFrame`
 
----
+Formålet er å repetere grunnmønsteret før vi går videre.
 
-## 1. demo8.html – utgangspunkt og rød tråd
+### 1.1 Game loop og tegning
 
-Vi ser på `demo8.html` og hva som allerede er på plass:
-- canvas og koordinatsystem
-- game loop som kjører kontinuerlig
-- en figur som faller nedover på grunn av gravitasjon
+Firkanten tegnes basert på nåværende `x`- og `y`-posisjon.
+Game loop-en oppdaterer posisjon og tegner på nytt for hver frame.
 
-Rød tråd for økten:
-> Først lærer vi å styre figuren → deretter lar vi flere ting bevege seg → til slutt avgjør vi når ting treffer hverandre.
+Rød tråd:
+> Game loop = oppdater state → tegn basert på state → neste frame
 
 ---
 
-## 2. Tastestyring med boolean per tast
+### 1.2 Tastestyring – styre posisjon direkte
 
-Vi bruker én boolean per tast.
-Dette gjør at figuren kan bevege seg **så lenge tasten holdes inne**.
+Vi legger først inn enkel tastestyring der tastene endrer posisjon direkte.
+Dette er bevisst «naivt», og brukes bare for å komme raskt i gang.
 
-### 2.1 Variabler
+#### Variabler
 
 ```js
 let leftPressed = false;
@@ -55,7 +43,7 @@ let upPressed = false;
 let downPressed = false;
 ```
 
-### 2.2 Tastetrykk
+#### Tastelyttere
 
 ```js
 function handleKeyDown(event) {
@@ -76,46 +64,69 @@ document.addEventListener('keydown', handleKeyDown);
 document.addEventListener('keyup', handleKeyUp);
 ```
 
-### 2.3 Bruk i game loop (konsept)
+I game loop-en:
+- hvis `leftPressed` → reduser `x`
+- hvis `rightPressed` → øk `x`
+- tilsvarende for `y`
 
-I game loop-en bruker vi boolean-ene til å:
-- enten flytte figuren direkte
-- eller (helst) justere fart i x- og y-retning
-
-Eksempel i tekst:
-- hvis `leftPressed` → reduser fart i x-retning
-- hvis `rightPressed` → øk fart i x-retning
-
-Dette bygger naturlig videre på gravitasjonen som allerede påvirker farten i y-retning.
+Dette fungerer, men er ikke slik spill vanligvis bygges.
 
 ---
 
-## 3. To firkanter med hver sin fart
+### 1.3 Tastestyring – styre fart i stedet for posisjon
 
-Neste steg er å legge til en firkant til:
-- den beveger seg automatisk
-- uavhengig av spilleren
+Neste forbedring:
+- tastene påvirker **fart**
+- farten påvirker posisjon
 
-Poenget her:
-- flere objekter oppdateres i samme game loop
-- vi er klare for å snakke om kollisjon
+Vi introduserer:
+- `vx` og `vy`
+- posisjon oppdateres basert på fart
+
+Rød tråd:
+> Input → endrer fart → fart endrer posisjon
+
+Dette er samme mønster som vi senere bruker i demo8 med gravitasjon.
 
 ---
 
-## 4. Kollisjon mellom firkanter (AABB)
+## Del 2 – demo4.html: Kollisjon og game over
 
-### Hva er AABB?
+Nå skifter vi eksempel helt bevisst.
 
-**AABB** står for **Axis-Aligned Bounding Box**.
+Vi åpner `demo4.html`, som allerede inneholder:
+- en firkant som beveger seg automatisk
+- fart i x- og y-retning
+- sprett i kantene
 
-- *Axis-aligned* betyr at firkantene ikke er rotert  
-- *Bounding box* betyr at vi bruker en enkel firkant rundt objektet
+### 2.1 Legge til en fast firkant
 
-I praksis:
-- vi sjekker om to vanlige rektangler overlapper hverandre
-- dette er standard kollisjonsmetode i enkle 2D-spill
+Vi legger til:
+- én firkant med fast posisjon midt på skjermen
+- denne firkanten beveger seg ikke
 
-### Prinsipp for kollisjon
+Nå har vi:
+- én firkant i bevegelse
+- én stillestående firkant
+
+Dette er et perfekt utgangspunkt for kollisjon.
+
+---
+
+### 2.2 Kollisjon mellom firkanter (AABB)
+
+#### Hva er AABB?
+
+AABB står for **Axis-Aligned Bounding Box**.
+
+- *Axis-aligned*: firkantene er ikke rotert
+- *Bounding box*: vi bruker en enkel firkant som representerer objektet
+
+Dette er den vanligste og enkleste kollisjonsmetoden i 2D-spill.
+
+---
+
+#### Prinsipp
 
 To firkanter kolliderer **ikke** hvis:
 - den ene er helt til venstre for den andre
@@ -125,7 +136,9 @@ To firkanter kolliderer **ikke** hvis:
 
 Hvis ingen av disse stemmer, har vi kollisjon.
 
-### Kollisjonsfunksjon
+---
+
+#### Kollisjonsfunksjon
 
 ```js
 function rectanglesCollide(r1, r2) {
@@ -144,21 +157,31 @@ function rectanglesCollide(r1, r2) {
 }
 ```
 
-### Bruk i spillet
+Vi bruker denne funksjonen i game loop-en:
+- ved kollisjon stopper vi animasjonen
+- dette er vårt første *game over*
 
-I game loop-en:
-- sjekk kollisjon mellom spiller og den andre firkanten
-- ved kollisjon → *game over* (f.eks. stoppe animasjonen og vise tekst)
+Rød tråd:
+> Kollisjon handler ikke om grafikk – bare om tall.
 
 ---
 
-## 5. Overgang til Flappy Bird
+## Del 3 – demo8.html: Mot «Flappy Martin»
 
-Nå bygger vi direkte videre på `demo8`.
+Til slutt går vi tilbake til `demo8.html`.
 
-### 5.1 Space = hopp
+Vi ser kort på hva som allerede finnes:
+- gravitasjon
+- bakgrunn som beveger seg
+- en figur som faller
 
-Vi bruker **samme boolean-mønster** som for piltastene.
+Nå kan vi bruke verktøyene vi nettopp har lært.
+
+---
+
+### 3.1 Tastestyring: space = hopp
+
+Vi bruker samme boolean-mønster som tidligere.
 
 ```js
 let spacePressed = false;
@@ -174,39 +197,45 @@ function handleKeyUp(event) {
 
 I game loop-en:
 - hvis `spacePressed` → gi figuren et oppover-kick i y-fart
-- gravitasjonen trekker den ned igjen
-
-Sprett i bakken fjernes.
-Når figuren treffer bakken → *game over*.
+- gravitasjonen trekker figuren ned igjen
 
 ---
 
-### 5.2 Stolper og kollisjon
+### 3.2 Bakken er ikke sprett – bakken er tap
 
-- En stolpe er også bare en firkant (egentlig to)
-- De beveger seg mot spilleren
-- Kollisjonsfunksjonen fra tidligere gjenbrukes
+I demo8 var bakken tidligere noe figuren spratt på.
 
-Ved kollisjon med stolpe → *game over*.
+Nå endrer vi betydningen:
+- bakken er en kollisjon
+- kollisjon med bakken gir *game over*
 
----
-
-### 5.3 Flere stolper og enkel refaktor (hvis tid)
-
-Hvis det er tid:
-- samle stolpene i et array
-- løkke gjennom arrayet
-- samme kollisjonskode brukes for alle
+Dette er samme kollisjonsidé som i demo4 – bare med en annen reaksjon.
 
 ---
 
-## Fokus for økten
+### 3.3 Stolper og kollisjon
 
-- Tastaturinput styrer fart, ikke bare posisjon
-- Flere objekter kan oppdateres samtidig
-- Kollisjon avgjør når spillet er over
-- Flappy Bird er nå bare en kombinasjon av:
-  - gravitasjon
-  - hopp
-  - hindringer
-  - kollisjon
+Vi legger til stolper:
+- stolper er firkanter
+- de beveger seg mot spilleren
+
+Ved kollisjon mellom:
+- figur og stolpe
+- figur og bakken
+
+→ *game over*
+
+Samme kollisjonsfunksjon brukes hele veien.
+
+---
+
+## Oppsummering av økten
+
+I denne økten har vi:
+- repetert game loop og bevegelse
+- lært tastestyring via boolean per tast
+- introdusert kollisjon med AABB
+- brukt kollisjon til å avgjøre *game over*
+- bygget videre mot et faktisk spill
+
+Alt bygger på samme enkle ideer – brukt i stadig rikere eksempler.

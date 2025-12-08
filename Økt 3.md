@@ -1,184 +1,131 @@
 # Økt 3 – Tastestyring, kollisjon og vei mot Flappy Bird
-**Underviser-guide – JavaScript Canvas / demo8**  
+**JavaScript Canvas – videre på demo8**
 
-Utgangspunkt: eksisterende `demo8.html` med:
-- canvas
+Utgangspunkt:
+- `demo8.html` med canvas
 - bakgrunn som scroller
-- figur med gravitasjon (fall nedover)
-- game loop (f.eks. `drawRectangles` + `requestAnimationFrame`)
+- figur som påvirkes av gravitasjon
+- game loop (`requestAnimationFrame`)
 
 Målet for økten:
-- styre en firkant/figur med tastatur (først posisjon, så fart)
-- ha to bevegelige firkanter på skjermen
-- implementere enkel kollisjonsdeteksjon mellom firkanter (AABB)
+- styre figuren med tastatur
+- forstå fart i x- og y-retning
+- introdusere kollisjon mellom firkanter
 - bruke kollisjon til *game over*
-- komme så nær en første versjon av Flappy Bird som mulig
-
-Ingen eksplisitte elevoppgaver – dette er en ren gjennomføringsplan for økten.
+- bevege oss helt frem til en enkel Flappy Bird
 
 ---
 
-## Oversikt – foreslått flyt
+## Oversikt over økten
 
-1. Kort recap av demo8 og mål for økta
-2. Tastestyring for én firkant (posisjon → fart)
-3. To firkanter med hver sin fart
-4. Kollisjon mellom firkanter (AABB – axis aligned bounding boxes)
-5. Flappy Bird-retning:
-   - space = hopp
-   - bakken = game over
-   - én stolpe + kollisjon
-   - ev. en stolpe til + enkel refaktor
-   - hvis tid: score og/eller restart
+1. Vi ser på demo8.html og hva som allerede er på plass  
+2. Tastestyring med boolean per tast  
+3. To firkanter som beveger seg samtidig  
+4. Kollisjon mellom firkanter (AABB)  
+5. Gradvis overgang til Flappy Bird  
+   - space = hopp  
+   - bakken = game over  
+   - stolper + kollisjon  
 
 ---
 
-## 1. Recap og rød tråd (5–10 min)
+## 1. demo8.html – utgangspunkt og rød tråd
 
-- Vis `demo8.html` og forklar kort hva som allerede er på plass:
-  - canvas
-  - bakgrunn
-  - figur som faller pga. gravitasjon
-  - game loop-funksjon (f.eks. `drawRectangles`)
-- Si eksplisitt at **i dag skal vi begynne å gjøre dette til et spill**:
-  - vi skal styre figuren med tast
-  - vi skal ha andre ting som beveger seg
-  - vi skal vite når ting treffer hverandre (kollisjon)
+Vi ser på `demo8.html` og hva som allerede er på plass:
+- canvas og koordinatsystem
+- game loop som kjører kontinuerlig
+- en figur som faller nedover på grunn av gravitasjon
 
-Kort rød tråd:
-> Først bevegelse (tast & fart), så flere ting som beveger seg, så kollisjon, så Flappy.
+Rød tråd for økten:
+> Først lærer vi å styre figuren → deretter lar vi flere ting bevege seg → til slutt avgjør vi når ting treffer hverandre.
 
 ---
 
-## 2. Tastestyring – først direkte posisjon, så fart (ca. 15–20 min)
+## 2. Tastestyring med boolean per tast
 
-### 2.1 Enkel tastestyring – flytte posisjon direkte
+Vi bruker én boolean per tast.
+Dette gjør at figuren kan bevege seg **så lenge tasten holdes inne**.
 
-Lag (eller vis) en enkel variant der en firkant kan flyttes rundt med piltaster.
-
-Eksempel (konseptuelt – tilpass til din kode):
-
-```js
-let playerX = 50;
-let playerY = 50;
-const playerWidth = 40;
-const playerHeight = 40;
-
-let isLeftPressed = false;
-let isRightPressed = false;
-let isUpPressed = false;
-let isDownPressed = false;
-
-document.addEventListener('keydown', (event) => {
-    if (event.code === 'ArrowLeft') isLeftPressed = true;
-    if (event.code === 'ArrowRight') isRightPressed = true;
-    if (event.code === 'ArrowUp') isUpPressed = true;
-    if (event.code === 'ArrowDown') isDownPressed = true;
-});
-
-document.addEventListener('keyup', (event) => {
-    if (event.code === 'ArrowLeft') isLeftPressed = false;
-    if (event.code === 'ArrowRight') isRightPressed = false;
-    if (event.code === 'ArrowUp') isUpPressed = false;
-    if (event.code === 'ArrowDown') isDownPressed = false;
-});
-```
-
-I game loop-en (f.eks. i `drawRectangles`), før tegningen:
+### 2.1 Variabler
 
 ```js
-const speed = 4;
-
-if (isLeftPressed) playerX -= speed;
-if (isRightPressed) playerX += speed;
-if (isUpPressed) playerY -= speed;
-if (isDownPressed) playerY += speed;
+let leftPressed = false;
+let rightPressed = false;
+let upPressed = false;
+let downPressed = false;
 ```
 
-Og ved tegning:
+### 2.2 Tastetrykk
 
 ```js
-ctx.fillStyle = 'red';
-ctx.fillRect(playerX, playerY, playerWidth, playerHeight);
+function handleKeyDown(event) {
+    if (event.code === 'ArrowLeft') leftPressed = true;
+    if (event.code === 'ArrowRight') rightPressed = true;
+    if (event.code === 'ArrowUp') upPressed = true;
+    if (event.code === 'ArrowDown') downPressed = true;
+}
+
+function handleKeyUp(event) {
+    if (event.code === 'ArrowLeft') leftPressed = false;
+    if (event.code === 'ArrowRight') rightPressed = false;
+    if (event.code === 'ArrowUp') upPressed = false;
+    if (event.code === 'ArrowDown') downPressed = false;
+}
+
+document.addEventListener('keydown', handleKeyDown);
+document.addEventListener('keyup', handleKeyUp);
 ```
 
-### 2.2 Overgang til å styre fart
+### 2.3 Bruk i game loop (konsept)
 
-Neste steg: ikke endre posisjon direkte, men **fart**.
+I game loop-en bruker vi boolean-ene til å:
+- enten flytte figuren direkte
+- eller (helst) justere fart i x- og y-retning
 
-```js
-let playerVX = 0;
-let playerVY = 0;
+Eksempel i tekst:
+- hvis `leftPressed` → reduser fart i x-retning
+- hvis `rightPressed` → øk fart i x-retning
 
-const accel = 0.5;
-
-if (isLeftPressed) playerVX -= accel;
-if (isRightPressed) playerVX += accel;
-
-// Friksjon / brems (enkel variant)
-playerVX *= 0.9;
-
-// Oppdater posisjon
-playerX += playerVX;
-```
-
-Her kan du velge hvor avansert du vil gjøre det (f.eks. bare styre X-fart).
-
-Viktig forbindelse til demo8:
-- Demo8 har allerede gravitasjon (VY påvirkes nedover)
-- Nå viser du at **input = påvirkning av fart**, ikke “teleportering” av posisjon
+Dette bygger naturlig videre på gravitasjonen som allerede påvirker farten i y-retning.
 
 ---
 
-## 3. To firkanter med hver sin fart (ca. 10–15 min)
+## 3. To firkanter med hver sin fart
 
-Introduksjon:
-- Legg til en **annen firkant** som bare beveger seg “av seg selv”
+Neste steg er å legge til en firkant til:
+- den beveger seg automatisk
+- uavhengig av spilleren
 
-```js
-let enemyX = 300;
-let enemyY = 100;
-const enemyWidth = 40;
-const enemyHeight = 40;
-let enemyVX = -2; // beveger seg mot venstre
-```
-
-I game loop-en:
-
-```js
-enemyX += enemyVX;
-
-ctx.fillStyle = 'blue';
-ctx.fillRect(enemyX, enemyY, enemyWidth, enemyHeight);
-```
-
-Eventuelt:
-- la den sprette tilbake når den treffer kantene
-- eller respawne på høyre side når den går ut på venstre
-
-Poeng:
-- nå har du **minst to ting som beveger seg samtidig**
-- scenen er satt for kollisjon
+Poenget her:
+- flere objekter oppdateres i samme game loop
+- vi er klare for å snakke om kollisjon
 
 ---
 
-## 4. Kollisjon mellom firkanter (AABB) (ca. 15–20 min)
+## 4. Kollisjon mellom firkanter (AABB)
 
-Målet her:
-- ha én funksjon som kan svare på “treffer disse to hverandre?”
-- bruke den til å trigge “game over” eller stoppe animasjon
+### Hva er AABB?
 
-Vi tenker i termer av “ikke-kollisjon”:
+**AABB** står for **Axis-Aligned Bounding Box**.
 
-To rektangler **kolliderer ikke** hvis:
+- *Axis-aligned* betyr at firkantene ikke er rotert  
+- *Bounding box* betyr at vi bruker en enkel firkant rundt objektet
+
+I praksis:
+- vi sjekker om to vanlige rektangler overlapper hverandre
+- dette er standard kollisjonsmetode i enkle 2D-spill
+
+### Prinsipp for kollisjon
+
+To firkanter kolliderer **ikke** hvis:
 - den ene er helt til venstre for den andre
-- den ene er helt til høyre for den andre
-- den ene er helt over den andre
-- den ene er helt under den andre
+- eller helt til høyre
+- eller helt over
+- eller helt under
 
-Ellers er det kollisjon.
+Hvis ingen av disse stemmer, har vi kollisjon.
 
-Lag en funksjon:
+### Kollisjonsfunksjon
 
 ```js
 function rectanglesCollide(r1, r2) {
@@ -197,158 +144,69 @@ function rectanglesCollide(r1, r2) {
 }
 ```
 
-Bruk den i game loop-en:
+### Bruk i spillet
 
-```js
-const playerRect = { x: playerX, y: playerY, width: playerWidth, height: playerHeight };
-const enemyRect = { x: enemyX, y: enemyY, width: enemyWidth, height: enemyHeight };
-
-if (rectanglesCollide(playerRect, enemyRect)) {
-    // for eksempel stoppe animasjonen:
-    gameOver = true;
-}
-```
-
-Hvis du har en `gameOver`-variabel i toppen:
-
-```js
-let gameOver = false;
-```
-
-Og i game loop-en:
-
-```js
-if (gameOver) {
-    // Tegn en tekst og returner uten å oppdatere videre
-    ctx.fillStyle = 'black';
-    ctx.font = '30px Arial';
-    ctx.fillText('Game Over', 100, 100);
-    return;
-}
-```
-
-Dette er første gang de ser et “ordentlig” game over.
-
-**Kort kommentar om logiske operatorer:**  
-Over er et naturlig sted å peke på at `||` betyr “eller” og `&&` kunne brukt i en alternativ formulering, uten å gjøre det til eget tema.
+I game loop-en:
+- sjekk kollisjon mellom spiller og den andre firkanten
+- ved kollisjon → *game over* (f.eks. stoppe animasjonen og vise tekst)
 
 ---
 
-## 5. Vei mot Flappy Bird (resten av tiden)
+## 5. Overgang til Flappy Bird
 
-Nå går du fra “sandbox” til noe som ligner Flappy Bird, gjerne ved å bygge videre på demo8.
+Nå bygger vi direkte videre på `demo8`.
 
-### 5.1 Space = hopp, bakken = game over
+### 5.1 Space = hopp
 
-Bruk demo8 sin figur med gravitasjon (f.eks. `martinY`, `martinVY` osv.).
-
-Legg til input:
+Vi bruker **samme boolean-mønster** som for piltastene.
 
 ```js
-let isSpacePressed = false;
+let spacePressed = false;
 
-document.addEventListener('keydown', (event) => {
-    if (event.code === 'Space') {
-        isSpacePressed = true;
-    }
-});
+function handleKeyDown(event) {
+    if (event.code === 'Space') spacePressed = true;
+}
 
-document.addEventListener('keyup', (event) => {
-    if (event.code === 'Space') {
-        isSpacePressed = false;
-    }
-});
+function handleKeyUp(event) {
+    if (event.code === 'Space') spacePressed = false;
+}
 ```
 
 I game loop-en:
+- hvis `spacePressed` → gi figuren et oppover-kick i y-fart
+- gravitasjonen trekker den ned igjen
 
-```js
-// Gravitasjon
-martinVY += gravity;
-
-// Hopp
-if (isSpacePressed) {
-    martinVY = -jumpStrength; // f.eks. -8 eller -10
-}
-
-martinY += martinVY;
-```
-
-For bakken (forutsatt at du har en “groundY” eller tilsvarende):
-
-```js
-if (martinY + martinHeight >= groundY) {
-    gameOver = true;
-}
-```
-
-Og fjern sprett-logikk hvis du hadde det tidligere.
-
-### 5.2 Én stolpe + kollisjon
-
-Lag en stolpe (rektangel) som beveger seg mot figuren:
-
-```js
-let pipeX = canvasWidth;
-let pipeWidth = 60;
-let pipeGapY = 150;      // hvor åpningen er
-let pipeGapHeight = 120; // størrelsen på åpningen
-let pipeSpeed = -3;
-```
-
-I game loop-en:
-
-```js
-pipeX += pipeSpeed;
-
-ctx.fillStyle = 'green';
-// Øvre stolpe
-ctx.fillRect(pipeX, 0, pipeWidth, pipeGapY);
-// Nedre stolpe
-ctx.fillRect(pipeX, pipeGapY + pipeGapHeight, pipeWidth, canvasHeight - (pipeGapY + pipeGapHeight));
-```
-
-Bruk kollisjonsfunksjonen fra tidligere ved å lage passende rektangler for øvre og nedre stolpe og sjekke dem mot figuren.
-
-### 5.3 En stolpe til + enkel refaktor (hvis tid)
-
-Hvis tiden tillater det:
-- vis hvordan du kan representere stolpene som et array av objekter
-- løkke over arrayet og:
-  - oppdatere posisjon
-  - tegne
-  - sjekke kollisjon
-
-Eksempel struktur:
-
-```js
-const pipes = [
-    { x: canvasWidth, width: 60, gapY: 150, gapHeight: 120 },
-    { x: canvasWidth + 300, width: 60, gapY: 180, gapHeight: 120 }
-];
-```
-
-I game loop-en, pseudo:
-
-```js
-for (const pipe of pipes) {
-    pipe.x += pipeSpeed;
-    // tegn øvre og nedre del
-    // sjekk kollisjon
-}
-```
-
-Score og restart kan tas dersom det er tid, men er ikke kritiske for hovedmålet med økten.
+Sprett i bakken fjernes.
+Når figuren treffer bakken → *game over*.
 
 ---
 
-## Oppsummert fokus for økten
+### 5.2 Stolper og kollisjon
 
-- Tastatur → kontroll over fart og bevegelse
-- Flere bevegelige objekter på skjermen samtidig
-- Kollisjon mellom firkanter (AABB) som første robuste spillmekanikk
-- Første versjon av Flappy-lignende opplevelse:
+- En stolpe er også bare en firkant (egentlig to)
+- De beveger seg mot spilleren
+- Kollisjonsfunksjonen fra tidligere gjenbrukes
+
+Ved kollisjon med stolpe → *game over*.
+
+---
+
+### 5.3 Flere stolper og enkel refaktor (hvis tid)
+
+Hvis det er tid:
+- samle stolpene i et array
+- løkke gjennom arrayet
+- samme kollisjonskode brukes for alle
+
+---
+
+## Fokus for økten
+
+- Tastaturinput styrer fart, ikke bare posisjon
+- Flere objekter kan oppdateres samtidig
+- Kollisjon avgjør når spillet er over
+- Flappy Bird er nå bare en kombinasjon av:
   - gravitasjon
-  - hopp med space
-  - hindring(er)
-  - game over ved kollisjon / bakken
+  - hopp
+  - hindringer
+  - kollisjon

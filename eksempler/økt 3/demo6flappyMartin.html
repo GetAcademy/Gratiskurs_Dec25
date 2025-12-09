@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        canvas {
+            background-color: antiquewhite;
+        }
+    </style>
+</head>
+
+<body onload="drawRectangles()">
+    <img id="martin" src="../../img/martin.png" style="display: none;" />
+    <img id="beach" src="../../img/big-beach.jpg" style="display: none;" />
+    <canvas id="game" width="800" height="600"></canvas>
+    <script>
+        const c = document.getElementById("game");
+        const ctx = c.getContext("2d");
+
+        const imgMartin = document.querySelector("#martin");
+        const imgBeach = document.querySelector("#beach");
+
+        let canvasWidth = c.width;
+        let canvasHeight = c.height;
+        let rectWidth = 104;
+        let rectHeight = 118;
+        let backgroundX = 0;
+        let backgroundWidth = 1000;
+        let backgroundHeight = 600;
+        let x = 100;
+        let y = 150;
+        let speedY = -1;
+        let margin = 50;
+        let gravity = 0.7;
+        let friction = 1;
+        let spacePressed = false;
+
+        function drawRectangles() {
+            clearCanvas();
+            drawObject();
+            move();
+
+            if (isOnGround()) {
+                y = canvasHeight - rectHeight;
+                clearCanvas();
+                drawObject();
+            } else {
+                addGravity();
+                requestAnimationFrame(drawRectangles);
+            }
+        }
+
+        function move() {
+            y += speedY;
+            backgroundX--;
+            if (spacePressed) {
+                bounce();
+                spacePressed = false;
+            }
+        }
+
+        function bounce() {
+            speedY = -12;
+        }
+
+        function addGravity() {
+            speedY += gravity;
+        }
+
+        function isOnGround() {
+            return y + rectHeight >= canvasHeight;
+        }
+
+        function drawObject() {
+            // ctx.fillStyle = 'green';
+            // ctx.fillRect(x, y, rectWidth, rectHeight);
+            ctx.drawImage(imgMartin, x, y, rectWidth, rectHeight);
+        }
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+            ctx.drawImage(imgBeach, backgroundX, 0, backgroundWidth, backgroundHeight);
+            ctx.drawImage(imgBeach, backgroundX + backgroundWidth, 0, backgroundWidth, backgroundHeight);
+            if (backgroundX <= -canvasWidth) {
+                backgroundX = 0;
+            }
+        }
+
+        function handleKeyDown(event) {
+            if (event.code === 'Space') spacePressed = true;
+        }
+
+        document.addEventListener('keydown', handleKeyDown);
+
+    </script>
+</body>
+
+</html>

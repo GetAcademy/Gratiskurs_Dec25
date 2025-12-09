@@ -3,8 +3,9 @@
 
 I denne økten jobber vi med tre korte og tydelige deler:
 1. En helt enkel firkant for repetisjon av game loop og tastestyring  
-2. demo4.html for å introdusere kollisjon og game over  
-3. demo8.html og veien videre mot «Flappy Martin»  
+1. demo4.html for å introdusere kollisjon og game over  
+1. Tilfeldige tall og farger
+1. demo8.html og veien videre mot «Flappy Martin»  
 
 Målet er å lære noen få, viktige mekanikker – og bruke dem flere ganger.
 
@@ -88,9 +89,7 @@ Rød tråd:
 
 Dette er samme mønster som vi senere bruker i demo8 med gravitasjon.
 
-### 1.4 Tilfeldige tall og farger
 
-`Math.random()` osv. 
 ---
 
 ## Del 2 – demo4.html: Kollisjon og game over
@@ -167,9 +166,13 @@ Vi bruker denne funksjonen i game loop-en:
 Rød tråd:
 > Kollisjon handler ikke om grafikk – bare om tall.
 
+## Del 3 Tilfeldige tall og farger
+
+`Math.random()` osv. 
+
 ---
 
-## Del 3 – demo8.html: Mot «Flappy Martin»
+## Del 4 – demo8.html: Mot «Flappy Martin»
 
 Til slutt går vi tilbake til `demo8.html`.
 

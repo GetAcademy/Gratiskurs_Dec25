@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        canvas {
+            background-color: lightgray;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="game" width="480" height="730"></canvas>
+    <script>
+        const c = document.getElementById("game");
+        const ctx = c.getContext("2d");
+
+        let rectWidth = getRandomIntMax(200);
+        let rectHeight = getRandomIntMax(200);
+        let x = getRandomIntMax(c.width - rectWidth);
+        let y = getRandomIntMax(c.height - rectHeight);
+
+        let red = getRandomIntMax(256);
+        let green = getRandomIntMax(256);
+        let blue = getRandomIntMax(256);
+
+        ctx.fillStyle = getRandomColor();
+        ctx.fillRect(x, y, rectWidth, rectHeight);
+
+        function getRandomColor() {
+            return `rgb(${red}, ${green}, ${blue})`;
+        }
+
+        function getRandomIntMax(max) {
+            return Math.floor(Math.random() * max);
+        }
+        function getRandomIntMinMax(min, max) {
+            return getRandomIntMax(max - min) + min;
+        }
+    </script>
+</body>
+
+</html>

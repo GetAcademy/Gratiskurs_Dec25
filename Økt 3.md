@@ -88,6 +88,9 @@ Rød tråd:
 
 Dette er samme mønster som vi senere bruker i demo8 med gravitasjon.
 
+### 1.4 Tilfeldige tall og farger
+
+`Math.random()` osv. 
 ---
 
 ## Del 2 – demo4.html: Kollisjon og game over

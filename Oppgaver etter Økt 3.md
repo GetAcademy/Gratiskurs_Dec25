@@ -3,7 +3,7 @@ Videre nedover her skal vi teste oss litt ut på gravitasjon, masse bruk av vari
 
 ## Oppgave 1: Sprettball!
 
-Tidligere har vi vært borti dette med å få en sirkel til å ikke forlate canvas med `if`-setninger og variabler. Nå skal vi teste oss litt på å lage enkel fysikk, hvor sirkelen faller og spretter i det den treffer "gulvet"!
+[Tidligere](./Oppgaver%20etter%20Økt%202.md) har vi vært borti dette med å få en sirkel til å ikke forlate canvas med `if`-setninger og variabler. Nå skal vi teste oss litt på å lage enkel fysikk, hvor sirkelen faller og spretter i det den treffer "gulvet"!
 
 1) Lag en ny fil
     - Kall den `sprettern.html`
@@ -76,7 +76,8 @@ Tidligere har vi vært borti dette med å få en sirkel til å ikke forlate canv
         - -> Sett `ySpeed` til det motsatte!
     Dette kan se slik ut:
     ```js
-    if(y > c.height) {
+    // Trekker fra radius på ball (-30), sånn at den ikke "klipper" gjennom gulvet
+    if(y > c.height - 30) {
         ySpeed = -ySpeed
     }
     ```
@@ -86,8 +87,15 @@ Tidligere har vi vært borti dette med å få en sirkel til å ikke forlate canv
     - Dette kan vi simulere:
     ```js
     // På if-setningen
-    if(y > c.height) {
+    if(y > c.height - 30) {
         ySpeed = -ySpeed * 0.8 //Fjerner litt og litt energi for hver gang
+    }
+    ```
+    - Hvis man finner at ballen blir "stuck" i gulvet, så kan det være en kjapp fix å midlertidig sette `y`-posisjonen til "gulvet" i if-setningen:
+    ```js
+    if(y > c.height - 30) {
+        y = c.height - 30 // setter y-posisjon til "gulvet"
+        ySpeed = -ySpeed * 0.8
     }
     ```
 6) Test ut selv!
@@ -153,10 +161,11 @@ Vi ønsker å bruke tastaturet til å bevege noe langs veien.
             ctx.drawImage(img,0,0)
         }
         ```
-        - Legg til en `onload` på `<body>`:
-        ```html
-        <body onload="draw()">
+        - Skriv denne linja en plass utenfor funksjonene (globalt)
+        ```js
+        window.onload = draw()
         ```
+        Denne linjen kjører tegnefunksjonen så fort alt er lastet inn, så vi kan forsikre oss om at bildet laster inn ordentlig.
         - Bildet burde vise seg i canvas!
     6) Evt. legg til en `style="display:none;"` for å gjemme bildet på utsiden av canvas:
     ```html
@@ -171,12 +180,13 @@ Vi ønsker å bruke tastaturet til å bevege noe langs veien.
 3) **Lag en funksjon som tegner opp bildet/figuren**
    - Kall den noe som `draw()` (om du ikke har gjort det allerede)
    - Legg til en `requestAnimationFrame(draw)` i bunnen av funksjonen
+   - Gjerne også legg til en `ctx.clearRect(0,0,c.width,c.height)` på toppen
    
    <details>
    <summary>👈 Sjekk om du har skrevet riktig så langt</summary>
    
    ```html
-   <body onload="draw()">
+   <body>
    <img id="image" src="terje.png" style="display:none;">
    <canvas id="canvas" width="800" height="600"></canvas>
    
@@ -194,6 +204,7 @@ Vi ønsker å bruke tastaturet til å bevege noe langs veien.
 
        requestAnimationFrame(draw)
    }
+   window.onload = draw()
    
    </script>
    </body>
@@ -204,9 +215,10 @@ Vi ønsker å bruke tastaturet til å bevege noe langs veien.
     For å flytte med tastetrykk, så må vi få nettleseren til å "høre etter" tastetrykk som vi gjør. Da kan vi bruke noe som heter [`addEventListener`](https://www.w3schools.com/jsref/met_document_addeventlistener.asp)!
     1) Lim inn denne koden rett under variablene:
     ```js
-    addEventListener("keydown", e => {
-        if (e.code === "ArrowDown") y += 1;
-    })
+    function handleKeyDown(e){
+        if (e.code === "ArrowDown") y += 1
+    }
+    document.addEventListener("keydown", handleKeyDown)
     ```
     - Hvis vi trykker på Pil Ned tasten nå, så burde bildet/figuren flytte seg nedover!
 5) **Gjøre bevegelsen mer *smooth***
@@ -214,16 +226,18 @@ Vi ønsker å bruke tastaturet til å bevege noe langs veien.
     Nå beveger bildet/figuren seg, men hvis man holder ned tasten så vil man se at det tar litt tid før den begynner å bevege seg; samt så er ikke bevegelsen veldig *smooth*. Problemet er at bevegelsen oppdaterer seg med tastaturet - og det vi vil er at den skal bevege seg så lenge tasten er trykket ned. Dette er to forskjellige ting.
     1) Vi kan bruke noen flere variabler som lagrer på om en knapp er trykket ned eller ikke
         - Lag en variabel som heter `moveDown` og sett den til `false`.
-        - I vår `addEventListener`, bytt ut `y += 5` med `moveDown = true`
+        - I funksjonen `handleKeyDown`, bytt ut `y += 5` med `moveDown = true`
         - I `draw()`-funksjonen, legg til denne `if`-sjekken:
         ```js
         if (moveDown) y += 1
         ```
-        - Legg til denne koden rett under vår første `addEventListener`:
+        Nå burde figuren/bildet bevege seg nedover i det vi trykker på tasten - men vi har et nytt problem hvor `moveDown` aldri blir satt til false. Vi må registrere at vi *slipper opp* tasten, i motsetning til at vi trykker en knapp *ned*.
+        - Vi legger til en funksjon som heter `handleKeyUp` - denne er identisk til `handleKeyDown`, bare at den setter `moveDown` til `false`. Deretter legger vi til en `addEventListener` for denne:
         ```js
-        addEventListener("keyup", e => {
-            if (e.code === "ArrowDown") moveDown = false;
-        })
+        function handleKeyUp(e){
+            if (e.code === "ArrowDown") moveDown = false
+        }
+        document.addEventListener("keyup", handleKeyUp)
         ```
         - Nå burde bildet/figuren bevege seg nedover og slutte å bevege seg i det vi slutter å holde Pil Ned!
     <details>
@@ -232,27 +246,33 @@ Vi ønsker å bruke tastaturet til å bevege noe langs veien.
     ```js
     const c = document.getElementById('canvas');
     const ctx = c.getContext('2d');
-    const img = document.getElementById('image');
+    const img = document.getElementById('image')
     // Skriv kode her! ↓↓↓
+
     let x = 0;
     let y = 0;
     let moveDown = false;
     
-    addEventListener("keydown", e => {
-        if (e.code === "ArrowDown") moveDown = true;
-    })
-    addEventListener("keyup", e => {
-        if (e.code === "ArrowDown") moveDown = false;
-    })
-
+    function handleKeyDown(e){
+        if(e.code === "ArrowDown") moveDown = true;
+    }
+    
+    function handleKeyUp(e){
+        if(e.code === "ArrowDown") moveDown = false;
+    }
+    
+    document.addEventListener("keydown", handleKeyDown)
+    document.addEventListener("keyup", handleKeyUp)
+    
     function draw() {
         ctx.clearRect(0,0,c.width,c.height)
-        ctx.drawImage(img,x,y)
-
+        
         if(moveDown) y += 1
-
+        
+        ctx.drawImage(img,x,y)
         requestAnimationFrame(draw)
     }
+    window.onload = draw()
     ```
     </details>
     <br>
@@ -261,12 +281,12 @@ Vi ønsker å bruke tastaturet til å bevege noe langs veien.
     
     Nå kan vi bare bevege oss i én retning - nedover. Hvis vi skal bevege oss i en annen retning, som f.eks. til høyre - så kan vi følge samme oppskrift som i punkt 5!
     1) `let moveRight = false`
-    2) Legg til i `addEventListener`
+    2) Legg til i `handleKeyDown()`:
     ```js
-    addEventListener("keydown", e => {
-        if(e.code === "ArrowDown") moveDown = true
-        if(e.code === "ArrowRight") moveRight = true
-    })
+    function handleKeyDown(e){
+        if (e.code === "ArrowDown") moveDown = true
+        if (e.code === "ArrowRight") moveRight = true
+    }
     ```
     3) I `draw()`-funksjonen:
     ```js
@@ -280,12 +300,12 @@ Vi ønsker å bruke tastaturet til å bevege noe langs veien.
         requestAnimationFrame(draw)
     }
     ```
-    4) I "keyup" `addEventListener`
+    4) I `handleKeyUp()`
     ```js
-    addEventListener("keyup", e => {
+    function handleKeyUp(e){
         if(e.code === "ArrowDown") moveDown = false
         if(e.code === "ArrowRight") moveRight = false
-    })
+    }
     ```
 
     Du burde nå kunne flytte bildet/figuren både nedover og til høyre!

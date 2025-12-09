@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        canvas {
+            background-color: lightblue;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="game" width="500" height="700"></canvas>
+    <script>
+        const c = document.getElementById("game");
+        const ctx = c.getContext("2d");
+
+        let canvasWidth = c.width;
+        let canvasHeight = c.height;
+        let rectWidth = 70;
+        let rectHeight = 70;
+        let rect1x = 300;
+        let rect1y = 300;
+        let rect2x = 400;
+        let rect2y = 100;
+        let speedX = 2;
+        let speedY = -3;
+        let margin = 50;
+
+        gameLoop();
+
+        function gameLoop() {
+            drawRectangles();
+
+            rect1x += speedX;
+            rect1y += speedY;
+
+            if (rect1x <= 0) {
+                speedX = -speedX;
+            } else if (rect1x + rectWidth > canvasWidth) {
+                speedX = -speedX;
+            }
+            if (rect1y <= 0) {
+                speedY = -speedY;
+            } else if (rect1y + rectHeight > canvasHeight) {
+                speedY = -speedY;
+            }
+
+            if (isCollision()) {
+                drawRectangles();
+            } else {
+                requestAnimationFrame(gameLoop);
+            }
+        }
+
+        function drawRectangles() {
+            ctx.clearRect(0, 0, 800, 800);
+
+            ctx.fillStyle = "green";
+            ctx.fillRect(rect1x, rect1y, rectWidth, rectHeight);
+
+            ctx.fillStyle = "blue";
+            ctx.fillRect(rect2x, rect2y, rectWidth, rectHeight);
+        }
+
+        function isCollision() {
+            /*
+                To firkanter kolliderer ikke hvis:
+
+                den ene ... for den andre
+                1. er helt til venstre 
+                2. er helt til høyre
+                3. er helt over
+                4. er helt under
+                Hvis ingen av disse stemmer, har vi kollisjon.
+            */
+            let left1 = rect1x;
+            let left2 = rect2x;
+            let right1 = rect1x + rectWidth;
+            let right2 = rect2x + rectWidth;
+            let top1 = rect1y;
+            let top2 = rect2y;
+            let bottom1 = rect1y + rectHeight;
+            let bottom2 = rect2y + rectHeight;
+
+            if (right1 < left2) return false; // 1
+            if (left1 > right2) return false; // 2
+            if (bottom1 < top2) return false; // 3
+            if (top1 > bottom2) return false; // 4
+
+            return true;
+        }
+    </script>
+</body>
+
+</html>

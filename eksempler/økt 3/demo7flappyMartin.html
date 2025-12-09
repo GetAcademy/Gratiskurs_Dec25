@@ -13,7 +13,7 @@
 </head>
 
 <body onload="drawRectangles()">
-    <img id="martin" src="../../img/martin2.png" style="display: none;" />
+    <img id="martin" src="../../img/martin3.png" style="display: none;" />
     <img id="beach" src="../../img/big-beach.jpg" style="display: none;" />
     <canvas id="game" width="800" height="600"></canvas>
     <script>
@@ -26,13 +26,15 @@
         let canvasWidth = c.width;
         let canvasHeight = c.height;
 
-        let pipe1x = canvasWidth;
-        let pipe1y = 0;
         let pipeWidth = 80;
         let pipeHeight = 200;
+        let pipe1x = canvasWidth;
+        let pipe1y = 0;
+        let pipe2x = canvasWidth;
+        let pipe2y = canvasHeight - pipeHeight;
 
-        let rectWidth = 84;
-        let rectHeight = 114;
+        let rectWidth = 92;
+        let rectHeight = 119;
 
         let backgroundX = 0;
         let backgroundWidth = 1000;
@@ -52,8 +54,8 @@
             drawMartin();
             move();
 
-            if (isOnGround() || isCollision()) {
-                if(isOnGround()) y = canvasHeight - rectHeight;
+            if (isOnGround() || isCollisionUpper() || isCollisionLower()) {
+                if (isOnGround()) y = canvasHeight - rectHeight;
                 clearCanvas();
                 drawPipes();
                 drawMartin();
@@ -65,6 +67,7 @@
 
         function move() {
             pipe1x -= 2;
+            pipe2x -= 2;
             y += speedY;
             backgroundX--;
             if (spacePressed) {
@@ -88,6 +91,7 @@
         function drawPipes() {
             ctx.fillStyle = '#FDD9A1';
             ctx.fillRect(pipe1x, pipe1y, pipeWidth, pipeHeight);
+            ctx.fillRect(pipe2x, pipe2y, pipeWidth, pipeHeight);
         }
 
         function drawMartin() {
@@ -109,7 +113,7 @@
 
         document.addEventListener('keydown', handleKeyDown);
 
-        function isCollision() {
+        function isCollisionUpper() {
             /*
                 To firkanter kolliderer ikke hvis:
 
@@ -136,6 +140,35 @@
 
             return true;
         }
+
+        function isCollisionLower() {
+            /*
+                To firkanter kolliderer ikke hvis:
+
+                den ene ... for den andre
+                1. er helt til venstre 
+                2. er helt til høyre
+                3. er helt over
+                4. er helt under
+                Hvis ingen av disse stemmer, har vi kollisjon.
+            */
+            let left1 = x;
+            let left2 = pipe2x;
+            let right1 = x + rectWidth;
+            let right2 = pipe2x + pipeWidth;
+            let top1 = y;
+            let top2 = pipe2y;
+            let bottom1 = y + rectHeight;
+            let bottom2 = pipe2y + pipeHeight;
+
+            if (right1 < left2) return false; // 1
+            if (left1 > right2) return false; // 2
+            if (bottom1 < top2) return false; // 3
+            if (top1 > bottom2) return false; // 4
+
+            return true;
+        }
+
 
     </script>
 </body>

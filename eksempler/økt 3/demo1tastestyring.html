@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        canvas {
+            background-color: lightgray;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="game" width="480" height="730"></canvas>
+    <script>
+        let leftPressed = false;
+        let rightPressed = false;
+        let upPressed = false;
+        let downPressed = false;
+
+        let x = 180;
+        let y = 180;
+
+        const c = document.getElementById("game");
+        const ctx = c.getContext("2d");
+
+        draw();
+
+        function draw() {
+            ctx.clearRect(0, 0, c.width, c.height);
+
+            ctx.fillStyle = "green";
+            ctx.fillRect(x, y, 200, 200);
+
+            if (leftPressed) x -= 1;
+            if (rightPressed) x += 1;
+            if (upPressed) y -= 1;
+            if (downPressed) y += 1;
+
+            requestAnimationFrame(draw);
+        }
+
+
+        function handleKeyDown(event) {
+            if (event.code === 'ArrowLeft') leftPressed = true;
+            if (event.code === 'ArrowRight') rightPressed = true;
+            if (event.code === 'ArrowUp') upPressed = true;
+            if (event.code === 'ArrowDown') downPressed = true;
+        }
+
+        function handleKeyUp(event) {
+            if (event.code === 'ArrowLeft') leftPressed = false;
+            if (event.code === 'ArrowRight') rightPressed = false;
+            if (event.code === 'ArrowUp') upPressed = false;
+            if (event.code === 'ArrowDown') downPressed = false;
+        }
+
+        document.addEventListener('keydown', handleKeyDown);
+        document.addEventListener('keyup', handleKeyUp);
+
+    </script>
+</body>
+
+</html>

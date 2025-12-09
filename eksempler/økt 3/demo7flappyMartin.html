@@ -25,11 +25,19 @@
 
         let canvasWidth = c.width;
         let canvasHeight = c.height;
+
+        let pipe1x = canvasWidth;
+        let pipe1y = 0;
+        let pipeWidth = 80;
+        let pipeHeight = 200;
+
         let rectWidth = 104;
         let rectHeight = 118;
+
         let backgroundX = 0;
         let backgroundWidth = 1000;
         let backgroundHeight = 600;
+
         let x = 100;
         let y = 150;
         let speedY = -1;
@@ -40,13 +48,15 @@
 
         function drawRectangles() {
             clearCanvas();
-            drawObject();
+            drawPipes();
+            drawMartin();
             move();
 
-            if (isOnGround()) {
-                y = canvasHeight - rectHeight;
+            if (isOnGround() || isCollision()) {
+                if(isOnGround()) y = canvasHeight - rectHeight;
                 clearCanvas();
-                drawObject();
+                drawPipes();
+                drawMartin();
             } else {
                 addGravity();
                 requestAnimationFrame(drawRectangles);
@@ -54,6 +64,7 @@
         }
 
         function move() {
+            pipe1x -= 2;
             y += speedY;
             backgroundX--;
             if (spacePressed) {
@@ -63,7 +74,7 @@
         }
 
         function bounce() {
-            speedY = -12; 
+            speedY = -12;
         }
 
         function addGravity() {
@@ -74,9 +85,12 @@
             return y + rectHeight >= canvasHeight;
         }
 
-        function drawObject() {
-            // ctx.fillStyle = 'green';
-            // ctx.fillRect(x, y, rectWidth, rectHeight);
+        function drawPipes() {
+            ctx.fillStyle = '#FDD9A1';
+            ctx.fillRect(pipe1x, pipe1y, pipeWidth, pipeHeight);
+        }
+
+        function drawMartin() {
             ctx.drawImage(imgMartin, x, y, rectWidth, rectHeight);
         }
 
@@ -94,6 +108,34 @@
         }
 
         document.addEventListener('keydown', handleKeyDown);
+
+        function isCollision() {
+            /*
+                To firkanter kolliderer ikke hvis:
+
+                den ene ... for den andre
+                1. er helt til venstre 
+                2. er helt til høyre
+                3. er helt over
+                4. er helt under
+                Hvis ingen av disse stemmer, har vi kollisjon.
+            */
+            let left1 = x;
+            let left2 = pipe1x;
+            let right1 = x + rectWidth;
+            let right2 = pipe1x + pipeWidth;
+            let top1 = y;
+            let top2 = pipe1y;
+            let bottom1 = y + rectHeight;
+            let bottom2 = pipe1y + pipeHeight;
+
+            if (right1 < left2) return false; // 1
+            if (left1 > right2) return false; // 2
+            if (bottom1 < top2) return false; // 3
+            if (top1 > bottom2) return false; // 4
+
+            return true;
+        }
 
     </script>
 </body>

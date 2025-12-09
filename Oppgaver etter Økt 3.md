@@ -8,7 +8,7 @@ Videre nedover her skal vi teste oss litt ut på gravitasjon, masse bruk av vari
 1) Lag en ny fil
     - Kall den `sprettern.html`
     - Kopier inn denne koden og start en Live Server
-    - Du burde se en svart firkant med en sirkel!
+    - Du burde se noen svarte kanter med en sirkel!
     ```html
     <!DOCTYPE html>
     <html lang="en">

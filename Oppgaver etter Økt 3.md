@@ -1,6 +1,8 @@
 # Økt 3
 Videre nedover her skal vi teste oss litt ut på gravitasjon, masse bruk av variabler og dette med å bruke tastetrykk for å bevege noe over canvas!
 
+Det er ikke forventa at alle disse oppgavene *skal* bli gjort ferdig - det kan godt være inspirasjon til noe som kan gjøres i jula, f.eks.!
+
 ## Oppgave 1: Sprettball!
 
 [Tidligere](./Oppgaver%20etter%20Økt%202.md) har vi vært borti dette med å få en sirkel til å ikke forlate canvas med `if`-setninger og variabler. Nå skal vi teste oss litt på å lage enkel fysikk, hvor sirkelen faller og spretter i det den treffer "gulvet"!
@@ -314,3 +316,303 @@ Vi ønsker å bruke tastaturet til å bevege noe langs veien.
 - Lag resten av retningene mulig også!
 - Prøv å lag vegger rundt canvas, ikke få bildet/figuren til å rømme :D
 - I Økt 2 lagde Terje et eksempel hvor han fikk bakgrunnen til å bevege seg i [demo8.html](./eksempler/økt%202/demo8.html) - prøv å få veien til å bevege seg nedover!
+
+## (Vanskelig?) Oppgave 3: *Watch For Falling Rocks!* (AABB kollisjon)
+
+![watchforfallingrocks](./img/WatchForFallingRocks.gif)
+
+Her skal vi prøve oss på et lite *Dodge 'em* spill hvor vi prøver å få til noe kollisjon blant to rektangler!
+
+Ta utgangspunkt i denne koden:
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watch4FallingRocks!</title>
+    <style>
+        canvas {
+            border: 3px solid black;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="600" height="500"></canvas>
+
+    <script>
+        const c = document.getElementById('canvas');
+        const ctx = c.getContext('2d');
+
+        let playerY = 420;
+        let playerX = c.width / 2;
+        let playerH = 50;
+        let playerW = 50;
+        let playerSpeed = 6;
+
+        gameLoop()
+        function gameLoop() {
+            ctx.clearRect(0,0,c.width,c.height)
+
+            ctx.fillRect(playerX, playerY, playerW, playerH)
+
+            requestAnimationFrame(gameLoop)
+        }
+
+    </script>
+</body>
+</html>
+```
+Her har det allerede blitt laget en *spiller* i form av en svart firkant!
+
+1) **Lage *player*, få den til å gå fra side til side**
+    - Lag to variabler, `moveLeft` og `moveRight` - og sett de til `false`
+    - Lag funksjonalitet for å flytte spiller til høyre og venstre ved hjelp av `addEventListener`
+        <details>
+        <summary>👈 Forslag</summary>
+
+        ```js
+        const c = document.getElementById('canvas');
+        const ctx = c.getContext('2d');
+
+        let playerY = 420;
+        let playerX = c.width / 2;
+        let playerH = 50;
+        let playerW = 50;
+        let playerSpeed = 6;
+
+        let moveLeft = false;
+        let moveRight = false;
+
+        function handleKeyDown(e) {
+            if (e.code === "ArrowLeft") moveLeft = true;
+            if (e.code === "ArrowRight") moveRight = true;
+        }
+        function handleKeyUp(e) {
+            if (e.code === "ArrowLeft") moveLeft = false;
+            if (e.code === "ArrowRight") moveRight = false;
+        }
+        document.addEventListener("keydown", handleKeyDown)
+        document.addEventListener("keyup", handleKeyUp)
+
+        gameLoop()
+        function gameLoop() {
+            ctx.clearRect(0,0,c.width,c.height)
+
+            ctx.fillRect(playerX, playerY, playerW, playerH)
+
+            if(moveLeft) playerX -= playerSpeed;
+            if(moveRight) playerX += playerSpeed;
+
+            requestAnimationFrame(gameLoop)
+        }
+        ```
+        </details>
+    - Hold spiller innenfor canvas!
+        <details>
+        <summary>👈 Forslag</summary>
+
+        ```js
+        function gameLoop() {
+            ctx.clearRect(0,0,c.width,c.height)
+
+            ctx.fillRect(playerX, playerY, playerW, playerH)
+
+            if(moveLeft) playerX -= playerSpeed;
+            if(moveRight) playerX += playerSpeed;
+
+            checkWallCollision()
+
+            requestAnimationFrame(gameLoop)
+        }
+
+        function checkWallCollision() {
+            if(playerX < 0) {
+                playerX = 0;
+            }
+            if(playerX > c.width - playerW) {
+                playerX = c.width - playerW;
+            }
+        }
+        ```
+        </details>
+2) **Lag en *Falling Rock*! (Hindring)**
+    
+    Her kan vi ta utgangspunkt i hvordan vi lagde spilleren.
+    - Lag en firkant som skal være en hindring
+        - Hindringen skal starte i midten, på toppen av skjermen - da trenger vi noen variabler for dette:
+        ```js
+        let obstacleH = 100;
+        let obstacleW = 100;
+        let obstacleY = 0;
+        let obstacleX = c.width / 2;
+        let obstacleSpeed = 3;
+        ```
+        - Vi kan evt. da lage en funksjon som tegner opp denne hindringen! Noe som dette:
+        ```js
+        function gameLoop() {
+            ctx.clearRect(0,0,c.width,c.height)
+
+            ctx.fillRect(playerX, playerY, playerW, playerH)
+
+            drawObstacle() // tegnes i gameLoop!
+
+            if(moveLeft) playerX -= playerSpeed;
+            if(moveRight) playerX += playerSpeed;
+
+            checkWallCollision()
+
+            requestAnimationFrame(gameLoop)
+        }
+
+        function drawObstacle() {
+            ctx.fillRect(obstacleX, obstacleY, obstacleW, obstacleH)
+        }
+        ```
+        Hvis alt er gått etter planen, så burde vi se en litt større svart firkant på toppen av canvas!
+3) **Få hindringen til å falle!**
+
+    Som på gif-en i starten av denna oppgaven!
+    - Da må `obstacleY`-verdien endre seg, så vi kan jo forsåvidt bare putte den i `gameLoop`:
+    ```js
+    function gameLoop() {
+        ctx.clearRect(0,0,c.width,c.height)
+
+        ctx.fillRect(playerX, playerY, playerW, playerH)
+
+        drawObstacle()
+
+        if(moveLeft) playerX -= playerSpeed;
+        if(moveRight) playerX += playerSpeed;
+        obstacleY += obstacleSpeed; // y-posisjon oppdateres på hindring!
+
+        checkWallCollision()
+
+        requestAnimationFrame(gameLoop)
+    }
+    ```
+    Nå burde hindringen falle; men vi ser den bare falle én gang... Samtidig så starter den å falle i det vi laster inn nettsiden. 
+    - Hvis vi skal få hindringen til å *loope*, så trenger vi bare å sette y-posisjonen tilbake til toppen i det den treffer bunnen:
+    ```js
+    function drawObstacle() {
+        ctx.fillRect(obstacleX, obstacleY, obstacleW, obstacleH)
+    
+        if(obstacleY > c.height) {
+            obstacleY = 0 - obstacleH; // starter på utsiden av canvas!
+        }
+    }
+    ```
+    Hindringen burde nå loope!
+    
+    Vi kan også skaffe oss litt mer tid før spillet starter - sette en variabel som står for om hindringen skal starte å bevege seg eller ikke.
+    - Da kan vi lage en variabel som heter `gameStarted`:
+    ```js
+    let gameStarted = false;
+    ```
+    - I det spilleren trykker på MELLOMROM (space), så starter spillet:
+    ```js
+    function handleKeyDown(e) {
+        if (e.code === "ArrowLeft") moveLeft = true;
+        if (e.code === "ArrowRight") moveRight = true;
+        if (e.code === "Space") gameStarted = true;
+    }
+    ```
+    - Da kan vi avvente med å bevege hindringen før mellomrom har blitt trykket på!
+    ```js
+    function gameLoop() {
+        ctx.clearRect(0,0,c.width,c.height)
+
+        ctx.fillRect(playerX, playerY, playerW, playerH)
+
+        drawObstacle()
+
+        if(moveLeft) playerX -= playerSpeed;
+        if(moveRight) playerX += playerSpeed;
+        if(gameStarted) obstacleY += obstacleSpeed; //Sjekker om en tast er trykket!
+
+        checkWallCollision()
+
+        requestAnimationFrame(gameLoop)
+    }
+    ```
+    Hvis alt er good nå, så burde animasjonen starte i det du trykker på mellomrom!
+4) **"Axis-aligned Bounding box" (AABB) - Få kollisjon på hindringen!**
+    
+    Foreløpig så har vi et litt kjipt spill, hvor hindringen bare *phaser* gjennom spilleren. 
+
+    "AABB" kan vi skrive som en `if`-setning, hvor det er 4 ting som alle må være `true` for at en kollisjon skal ha tatt sted:
+    1) *Spilleren er til venstre for hindringens høyre side*
+    2) *Spilleren er til høyre for hindringens venstre side*
+    3) *Spilleren er over bunnpunktet til hindringen*
+    4) *Spilleren er under toppunktet til hindringen*
+
+    Hvis alle disse er sanne, så må det tilsi at spilleren er på innsiden av hindringen (som er en kollisjon!).
+    - Hvis vi får en kollisjon, så kan vi lage en "Game Over!" - dette kan vi representere som en variabel:
+    ```js
+    let gameOver = false;
+    ```
+    - Vi kan lage en funksjon som gjør kollisjonssjekken (`if`-en!)
+    ```js
+    function checkCollision() {
+        if (playerX < obstacleX + obstacleW &&
+            playerX + playerW > obstacleX &&
+            playerY < obstacleY + obstacleH &&
+            playerY + playerH > obstacleY) {
+            
+            gameOver = true; //Om en kollisjon skjer, game over!
+        }
+    }
+    ```
+    - Deretter, kan vi lage noe som skjer dersom det er kollisjon, f.eks. stoppe spillet og gi en alert:
+    ```js
+    function gameLoop() {
+        ctx.clearRect(0,0,c.width,c.height)
+
+        if(!gameOver) {
+            ctx.fillRect(playerX, playerY, playerW, playerH)
+            
+            drawObstacle()
+
+            if(moveLeft) playerX -= playerSpeed
+            if(moveRight) playerX += playerSpeed
+
+            if(gameStarted) obstacleY += obstacleSpeed
+
+            checkWallCollision()
+            checkCollision() //Legger til kollisjonssjekk
+        } else {
+            alert('You died!')
+            gameStarted = false
+            gameOver = false
+            obstacleY = 0 - obstacleH
+        }
+        requestAnimationFrame(gameLoop)
+    }
+    ```
+    Nå burde spillet stoppe og gi en melding at du har tapt; samt restarte i det du trykker OK!
+
+5) ***Random falling rocks!* - `Math.random!`** 
+    
+    Det er litt kjipt at den hindringen skal bare være på et sted - dette kan vi fikse med å randomisere dette - med noe som heter [`Math.random`](https://www.w3schools.com/jsref/jsref_random.asp)!
+    
+    Tanken er at vi ikke skal randomisere `Y`-posisjonen til hindringen, men at vi vil randomisere `X`-posisjonen - horisontalt!
+
+    1) I `drawObstacle()`, legg til denne linja:
+    ```js
+    function drawObstacle() {
+        ctx.fillRect(obstacleX, obstacleY, obstacleW, obstacleH)
+        
+        if(obstacleY > c.height) {
+            obstacleY = 0 - obstacleH
+            obstacleX = Math.random() * (c.width - obstacleW) // Setter X-verdien til noe random, men innenfor canvas!
+        }
+    }
+    ```
+    Nå burde hindringen være random!
+
+**BONUS!**
+- Poeng! Vi burde få et poeng hver gang vi unngår en *falling rock*!
+- En bakgrunn som beveger seg? (Illusjon av bevegelse!)
+- Dra ut ting i funksjoner!
+- Bytt ut hindringen og player med et bilde! (Burde helst være firkanta, da kollisjonen tenker på det...)
+- Kanskje spiller har "bullets" som man kan skyte hindringen med? :P

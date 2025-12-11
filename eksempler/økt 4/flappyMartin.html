@@ -30,7 +30,7 @@
         let score = 0;
 
         let pipeWidth = 80;
-        let pipeHeight = 160;
+        let pipeHeight = 100;
         let pipe1x = canvasWidth;
         let pipe1y = 0;
         let pipe2x = canvasWidth;
@@ -43,8 +43,10 @@
         let backgroundWidth = 1000;
         let backgroundHeight = 600;
 
-        let x = 100;
-        let y = 150;
+        let pipeSpeed = 3;
+        let backgroundSpeed = 1;
+        let playerX = 100;
+        let playerY = 150;
         let speedY = -1;
         let margin = 50;
         let gravity = 0.7;
@@ -55,7 +57,7 @@
             drawGame();
             if (!isGameOver) {
                 move();
-                score += 0.01;
+                updateScore();
             } else {
                 if (spacePressed) {
                     restartGame();
@@ -66,7 +68,7 @@
                 || isCollision(pipe1x, pipe1y)
                 || isCollision(pipe2x, pipe2y)) {
                 isGameOver = true;
-                if (isOnGround()) y = canvasHeight - rectHeight;
+                if (isOnGround()) playerY = canvasHeight - rectHeight;
                 drawGame();
             } else {
                 addGravity();
@@ -74,13 +76,20 @@
             requestAnimationFrame(drawRectangles);
         }
 
+        function updateScore() {
+            let pipeRightX = pipe1x + pipeWidth;
+            if (playerX >= pipeRightX && playerX < pipeRightX + pipeSpeed) {
+                score++;
+            }
+        }
+
         function restartGame() {
             isGameOver = false;
             score = 0;
             pipe1x = canvasWidth;
             pipe2x = canvasWidth;
-            x = 100;
-            y = 150;
+            playerX = 100;
+            playerY = 150;
             speedY = -1;
             spacePressed = false;
         }
@@ -95,7 +104,7 @@
 
         function drawScore() {
             const scoreText = Math.floor(score);
-            drawText(30, `Score: ${scoreText}`, 20, 40, 'yellow', 'orange');
+            drawText(30, `Score: ${scoreText}`, 20, 40, 'yellow', '#ff6600');
         }
 
         function drawGameOver() {
@@ -115,10 +124,16 @@
         }
 
         function move() {
-            pipe1x -= 2;
-            pipe2x -= 2;
-            y += speedY;
-            backgroundX--;
+            pipe1x -= pipeSpeed;
+            pipe2x -= pipeSpeed;
+            const pipeRightX = pipe1x + pipeWidth;
+            if (pipeRightX < 0) {
+                pipe1x = canvasWidth;
+                pipe2x = canvasWidth;
+                pipeSpeed += 0.2;
+            }
+            playerY += speedY;
+            backgroundX -= backgroundSpeed;
             if (spacePressed) {
                 bounce();
                 spacePressed = false;
@@ -134,7 +149,7 @@
         }
 
         function isOnGround() {
-            return y + rectHeight >= canvasHeight;
+            return playerY + rectHeight >= canvasHeight;
         }
 
         function drawPipes() {
@@ -150,8 +165,8 @@
         function drawMartin() {
             ctx.strokeStyle = '#735d38';
             ctx.lineWidth = 2;
-            ctx.drawImage(imgMartin, x, y, rectWidth, rectHeight);
-            ctx.strokeRect(x, y, rectWidth, rectHeight);
+            ctx.drawImage(imgMartin, playerX, playerY, rectWidth, rectHeight);
+            ctx.strokeRect(playerX, playerY, rectWidth, rectHeight);
         }
 
         function clearCanvas() {
@@ -180,13 +195,13 @@
                 4. er helt under
                 Hvis ingen av disse stemmer, har vi kollisjon.
             */
-            let left1 = x;
+            let left1 = playerX;
             let left2 = pipeX;
-            let right1 = x + rectWidth;
+            let right1 = playerX + rectWidth;
             let right2 = pipeX + pipeWidth;
-            let top1 = y;
+            let top1 = playerY;
             let top2 = pipeY;
-            let bottom1 = y + rectHeight;
+            let bottom1 = playerY + rectHeight;
             let bottom2 = pipeY + pipeHeight;
 
             if (right1 < left2) return false; // 1

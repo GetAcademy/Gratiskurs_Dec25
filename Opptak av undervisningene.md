@@ -9,3 +9,7 @@ https://photos.app.goo.gl/SCZSaq2ZgAQYriRB6
 # Økt 3
 
 https://photos.app.goo.gl/2kpMYw8VD5FNHRQd7
+
+# Økt 4
+
+https://photos.app.goo.gl/68TwtuJwvrXqnr449

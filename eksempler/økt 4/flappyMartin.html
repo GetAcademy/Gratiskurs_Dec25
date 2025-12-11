@@ -56,6 +56,10 @@
             if (!isGameOver) {
                 move();
                 score += 0.01;
+            } else {
+                if (spacePressed) {
+                    restartGame();
+                }
             }
 
             if (isOnGround()
@@ -68,6 +72,17 @@
                 addGravity();
             }
             requestAnimationFrame(drawRectangles);
+        }
+
+        function restartGame() {
+            isGameOver = false;
+            score = 0;
+            pipe1x = canvasWidth;
+            pipe2x = canvasWidth;
+            x = 100;
+            y = 150;
+            speedY = -1;
+            spacePressed = false;
         }
 
         function drawGame() {
@@ -84,7 +99,10 @@
         }
 
         function drawGameOver() {
-            drawText(60, 'GAME OVER', canvasWidth / 2 - 150, canvasHeight / 2, 'red', 'darkred');
+            const x = (canvasWidth / 2) - 150;
+            const y = canvasHeight / 2;
+            drawText(60, 'GAME OVER', x, y, 'red', 'darkred');
+            drawText(30, 'Trykk <space> for å starte på nytt', x - 40, y + 40, 'yellow', 'orange');
         }
 
         function drawText(fontSize, text, x, y, color1, color2) {

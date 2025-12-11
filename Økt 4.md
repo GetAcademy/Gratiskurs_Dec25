@@ -11,6 +11,10 @@ Fokuset er ikke nye konsepter, men å:
 
 ---
 
+## Men først litt info om GET Academy
+
+- www.getacademy.no
+
 ## Oversikt over økten
 
 1. Game over som tydelig tilstand  

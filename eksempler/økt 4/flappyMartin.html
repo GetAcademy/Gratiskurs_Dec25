@@ -58,7 +58,9 @@
                 score += 0.01;
             }
 
-            if (isOnGround() || isCollisionUpper() || isCollisionLower()) {
+            if (isOnGround()
+                || isCollision(pipe1x, pipe1y)
+                || isCollision(pipe2x, pipe2y)) {
                 isGameOver = true;
                 if (isOnGround()) y = canvasHeight - rectHeight;
                 drawGame();
@@ -77,16 +79,21 @@
         }
 
         function drawScore() {
-            ctx.fillStyle = 'black';
-            ctx.font = '30px Arial';
             const scoreText = Math.floor(score);
-            ctx.fillText(`Score: ${scoreText}`, 20, 40);
+            drawText(30, `Score: ${scoreText}`, 20, 40, 'yellow', 'orange');
         }
 
         function drawGameOver() {
-            ctx.fillStyle = 'red';
-            ctx.font = '60px Arial';
-            ctx.fillText('GAME OVER', canvasWidth / 2 - 150, canvasHeight / 2);
+            drawText(60, 'GAME OVER', canvasWidth / 2 - 150, canvasHeight / 2, 'red', 'darkred');
+        }
+
+        function drawText(fontSize, text, x, y, color1, color2) {
+            ctx.font = `${fontSize}px Arial`;
+            ctx.fillStyle = color1;
+            ctx.fillText(text, x, y);
+            ctx.strokeStyle = color2;
+            ctx.lineWidth = 1;
+            ctx.strokeText(text, x, y);
         }
 
         function move() {
@@ -144,7 +151,7 @@
 
         document.addEventListener('keydown', handleKeyDown);
 
-        function isCollisionUpper() {
+        function isCollision(pipeX, pipeY) {
             /*
                 To firkanter kolliderer ikke hvis:
 
@@ -156,13 +163,13 @@
                 Hvis ingen av disse stemmer, har vi kollisjon.
             */
             let left1 = x;
-            let left2 = pipe1x;
+            let left2 = pipeX;
             let right1 = x + rectWidth;
-            let right2 = pipe1x + pipeWidth;
+            let right2 = pipeX + pipeWidth;
             let top1 = y;
-            let top2 = pipe1y;
+            let top2 = pipeY;
             let bottom1 = y + rectHeight;
-            let bottom2 = pipe1y + pipeHeight;
+            let bottom2 = pipeY + pipeHeight;
 
             if (right1 < left2) return false; // 1
             if (left1 > right2) return false; // 2
@@ -171,36 +178,6 @@
 
             return true;
         }
-
-        function isCollisionLower() {
-            /*
-                To firkanter kolliderer ikke hvis:
-
-                den ene ... for den andre
-                1. er helt til venstre 
-                2. er helt til høyre
-                3. er helt over
-                4. er helt under
-                Hvis ingen av disse stemmer, har vi kollisjon.
-            */
-            let left1 = x;
-            let left2 = pipe2x;
-            let right1 = x + rectWidth;
-            let right2 = pipe2x + pipeWidth;
-            let top1 = y;
-            let top2 = pipe2y;
-            let bottom1 = y + rectHeight;
-            let bottom2 = pipe2y + pipeHeight;
-
-            if (right1 < left2) return false; // 1
-            if (left1 > right2) return false; // 2
-            if (bottom1 < top2) return false; // 3
-            if (top1 > bottom2) return false; // 4
-
-            return true;
-        }
-
-
     </script>
 </body>
 
